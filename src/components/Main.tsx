@@ -2,7 +2,11 @@
 import { PlaceCardProps } from '../types';
 import PlaceCard from './PlaceCard';
 
-export default function Main({cards}: {cards: PlaceCardProps[]}): JSX.Element {
+type MainProps = {
+  cards: PlaceCardProps[];
+}
+
+export default function Main({cards}: MainProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
