@@ -26,7 +26,7 @@ export default function App({ data }: AppProps): JSX.Element {
             </PrivateRoute>
           }
         />
-        <Route path='/offer/:id' element={<Offer />} />
+        <Route path='/offer/:id' element={<Offer cards={data} />} />
         <Route path='*' element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
