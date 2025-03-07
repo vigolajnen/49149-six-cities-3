@@ -1,8 +1,9 @@
-import { FavoritesCardProps, PlaceCardProps } from './types';
+import { Place } from './types';
 
-export const DATA: PlaceCardProps[] = [
+export const PLACES: Place[] = [
   {
     id: 1,
+    city: 'Amsterdam',
     name: 'Beautiful &amp; luxurious apartment at great location',
     price: 80,
     rating: '80%',
@@ -12,6 +13,7 @@ export const DATA: PlaceCardProps[] = [
   },
   {
     id: 2,
+    city: 'Amsterdam',
     name: 'Canal View Prinsengracht',
     price: 132,
     rating: '80%',
@@ -21,6 +23,7 @@ export const DATA: PlaceCardProps[] = [
   },
   {
     id: 3,
+    city: 'Amsterdam',
     name: 'Nice, cozy, warm big bed apartment',
     price: 180,
     rating: '100%',
@@ -30,6 +33,7 @@ export const DATA: PlaceCardProps[] = [
   },
   {
     id: 4,
+    city: 'Amsterdam',
     name: 'Wood and stone place',
     price: 80,
     rating: '80%',
@@ -39,7 +43,7 @@ export const DATA: PlaceCardProps[] = [
   },
 ];
 
-export const DATA_FAVORITES: FavoritesCardProps[] = [
+export const FAVORITE_PLACES: Place[] = [
   {
     id: 1,
     city: 'Amsterdam',

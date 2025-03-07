@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { PlaceCardProps } from '../types';
+import { Place } from '../types';
 
 type CardProps = {
-  card: PlaceCardProps;
+  card: Place;
   styled?: string;
   isBookmarkActive?: boolean;
 };

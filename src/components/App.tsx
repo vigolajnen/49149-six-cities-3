@@ -1,32 +1,28 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { PlaceCardProps } from '../types';
 import Main from './Main';
 import Login from './Login';
 import Offer from './Offer';
 import Favorites from './Favorites';
 import PrivateRoute from './PrivateRoute';
 import PageNotFound from './PageNotFound';
+import { Paths } from '../enums/paths';
 
-type AppProps = {
-  data: PlaceCardProps[];
-};
-
-export default function App({ data }: AppProps): JSX.Element {
+export default function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Main cards={data} />} />
-        <Route path='/login' element={<Login />} />
+        <Route path={Paths.Main} element={<Main />} />
+        <Route path={Paths.Login} element={<Login />} />
         <Route
-          path='/favorites'
+          path={Paths.Favorites}
           element={
             <PrivateRoute>
               <Favorites />
             </PrivateRoute>
           }
         />
-        <Route path='/offer/:id' element={<Offer cards={data} />} />
+        <Route path={Paths.Offer} element={<Offer />} />
         <Route path='*' element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

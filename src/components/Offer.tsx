@@ -1,18 +1,20 @@
 import { Link, useParams } from 'react-router-dom';
 import PageNotFound from './PageNotFound';
-import { PlaceCardProps } from '../types';
+import { Place } from '../types';
 import PlaceCard from './PlaceCard';
+import { PLACES } from '../data';
 
-type OfferProps = {
-  cards: PlaceCardProps[];
-};
 
-export default function Offer({ cards }: OfferProps) {
+export default function Offer() {
   const { id } = useParams();
-  const data = cards.filter((v: PlaceCardProps) => v.id === +id!)[0];
-  const dataOther = cards.filter((v: PlaceCardProps) => v.id !== +id!);
+  const data = PLACES.filter((place: Place) => place.id === +id!)[0];
+  const dataOther = PLACES.filter((place: Place) => place.id !== +id!);
 
-  return data ? (
+  if (!data) {
+    return <PageNotFound />;
+  }
+
+  return (
     <div className='page'>
       <header className='header'>
         <div className='container'>
@@ -214,7 +216,7 @@ export default function Offer({ cards }: OfferProps) {
           <section className='near-places places'>
             <h2 className='near-places__title'>Other places in the neighbourhood</h2>
             <div className='near-places__list places__list'>
-              {dataOther.map((v: PlaceCardProps) => (
+              {dataOther.map((v: Place) => (
                 <PlaceCard key={v.id} card={v} styled='near-places' />
               ))}
             </div>
@@ -222,7 +224,5 @@ export default function Offer({ cards }: OfferProps) {
         </div>
       </main>
     </div>
-  ) : (
-    <PageNotFound />
   );
 }

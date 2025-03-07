@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom';
-import { DATA_FAVORITES } from '../data';
-import { FavoritesCardProps } from '../types';
+
+import { Place } from '../types';
+import { FAVORITE_PLACES } from '../data';
 import PlaceCard from './PlaceCard';
 
+const filterFavoritePlacesByCity = (city: string, data: Place[]) => {
+  const filteredPlaces = data.filter((place: Place) => place.city === city);
+  return filteredPlaces;
+};
+
+const amsterdamFavorites = filterFavoritePlacesByCity('Amsterdam', FAVORITE_PLACES);
+const cologneFavorites = filterFavoritePlacesByCity('Cologne', FAVORITE_PLACES);
+
 export default function Favorites() {
-  const getCityFavorites = (city: string, data: FavoritesCardProps[]) => {
-    const result = data.filter((v: FavoritesCardProps) => v.city === city);
-    return result;
-  };
-  const dataAmsterdam = getCityFavorites('Amsterdam', DATA_FAVORITES);
-  const dataCologne = getCityFavorites('Cologne', DATA_FAVORITES);
   return (
     <div className='page'>
       <header className='header'>
@@ -54,8 +57,8 @@ export default function Favorites() {
                   </div>
                 </div>
                 <div className='favorites__places'>
-                  {dataAmsterdam.map((v: FavoritesCardProps) => (
-                    <PlaceCard key={v.name} card={v} styled='favorites' isBookmarkActive />
+                  {amsterdamFavorites.map((place: Place) => (
+                    <PlaceCard key={place.name} card={place} styled='favorites' isBookmarkActive />
                   ))}
                 </div>
               </li>
@@ -69,8 +72,8 @@ export default function Favorites() {
                   </div>
                 </div>
                 <div className='favorites__places'>
-                  {dataCologne.map((v: FavoritesCardProps) => (
-                    <PlaceCard key={v.name} card={v} styled='favorites' isBookmarkActive />
+                  {cologneFavorites.map((place: Place) => (
+                    <PlaceCard key={place.name} card={place} styled='favorites' isBookmarkActive />
                   ))}
                 </div>
               </li>
