@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Paths } from '../enums/paths';
 
 export default function PageNotFound() {
   return (
@@ -7,7 +8,7 @@ export default function PageNotFound() {
         <div className='container'>
           <div className='header__wrapper'>
             <div className='header__left'>
-              <Link className='header__logo-link header__logo-link--active' to='/'>
+              <Link className='header__logo-link header__logo-link--active' to={Paths.Main}>
                 <img className='header__logo' src='img/logo.svg' alt='6 cities logo' width='81' height='41' />
               </Link>
             </div>
@@ -22,7 +23,7 @@ export default function PageNotFound() {
               <div className='cities__status-wrapper tabs__content'>
                 <b className='cities__status'>404</b>
                 <p className='cities__status-description'>Нет такой страницы</p>
-                <Link to='/' style={{ textDecoration: 'underline' }}>
+                <Link to={Paths.Main} style={{ textDecoration: 'underline' }}>
                   На главную
                 </Link>
               </div>

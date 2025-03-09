@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Place } from '../types';
+import { Paths } from '../enums/paths';
 
 type CardProps = {
   card: Place;
@@ -17,7 +18,7 @@ export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = 
         </div>
       )}
       <div className={`${styled}__image-wrapper place-card__image-wrapper`}>
-        <Link to={`offer/${id}`}>
+        <Link to={Paths.Offer.replace(':id', String(id))}>
           <img className='place-card__image' src={poster} width={styled === 'favorites' ? '150' : '260'} height={styled === 'favorites' ? '110' : '200'} alt='Place image' />
         </Link>
       </div>
@@ -41,7 +42,7 @@ export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = 
           </div>
         </div>
         <h2 className='place-card__name'>
-          <a href='#'>{name}</a>
+          <Link to={Paths.Offer.replace(':id', String(id))}>{name}</Link>
         </h2>
         <p className='place-card__type'>{type}</p>
       </div>
