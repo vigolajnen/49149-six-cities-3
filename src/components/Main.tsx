@@ -1,11 +1,8 @@
-import { PlaceCardProps } from '../types';
+import { PLACES } from '../data';
+import { Place } from '../types';
 import PlaceCard from './PlaceCard';
 
-type MainProps = {
-  cards: PlaceCardProps[];
-};
-
-export default function Main({ cards }: MainProps): JSX.Element {
+export default function Main() {
   return (
     <div className='page page--gray page--main'>
       <header className='header'>
@@ -103,8 +100,8 @@ export default function Main({ cards }: MainProps): JSX.Element {
                 </ul>
               </form>
               <div className='cities__places-list places__list tabs__content'>
-                {cards.map((v) => (
-                  <PlaceCard key={v.name} card={v} />
+                {PLACES.map((place: Place) => (
+                  <PlaceCard key={place.name} card={place} />
                 ))}
               </div>
             </section>

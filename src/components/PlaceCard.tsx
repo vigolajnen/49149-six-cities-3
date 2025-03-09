@@ -1,34 +1,38 @@
-import { PlaceCardProps } from '../types';
+import { Link } from 'react-router-dom';
+import { Place } from '../types';
+import { Paths } from '../enums/paths';
 
 type CardProps = {
-  card: PlaceCardProps;
+  card: Place;
+  styled?: string;
+  isBookmarkActive?: boolean;
 };
 
-export default function PlaceCard({ card }: CardProps): JSX.Element {
-  const { name, price, rating, type, poster, isPremium } = card;
+export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = false }: CardProps): JSX.Element {
+  const { name, price, rating, type, poster, isPremium, id } = card;
   return (
-    <article className='cities__card place-card'>
+    <article className={`${styled}__card place-card`}>
       {isPremium && (
         <div className='place-card__mark'>
           <span>Premium</span>
         </div>
       )}
-      <div className='cities__image-wrapper place-card__image-wrapper'>
-        <a href='#'>
-          <img className='place-card__image' src={poster} width='260' height='200' alt='Place image' />
-        </a>
+      <div className={`${styled}__image-wrapper place-card__image-wrapper`}>
+        <Link to={Paths.Offer.replace(':id', String(id))}>
+          <img className='place-card__image' src={poster} width={styled === 'favorites' ? '150' : '260'} height={styled === 'favorites' ? '110' : '200'} alt='Place image' />
+        </Link>
       </div>
-      <div className='place-card__info'>
+      <div className={`${styled}__card-info place-card__info`}>
         <div className='place-card__price-wrapper'>
           <div className='place-card__price'>
             <b className='place-card__price-value'>&euro;{price}</b>
             <span className='place-card__price-text'>&#47;&nbsp;night</span>
           </div>
-          <button className='place-card__bookmark-button button' type='button'>
+          <button className={`place-card__bookmark-button button ${isBookmarkActive ? 'place-card__bookmark-button--active' : ''}`} type='button'>
             <svg className='place-card__bookmark-icon' width='18' height='19'>
               <use xlinkHref='#icon-bookmark'></use>
             </svg>
-            <span className='visually-hidden'>To bookmarks</span>
+            <span className='visually-hidden'>{isBookmarkActive ? 'In bookmarks' : 'To bookmarks'}</span>
           </button>
         </div>
         <div className='place-card__rating rating'>
@@ -38,7 +42,7 @@ export default function PlaceCard({ card }: CardProps): JSX.Element {
           </div>
         </div>
         <h2 className='place-card__name'>
-          <a href='#'>{name}</a>
+          <Link to={Paths.Offer.replace(':id', String(id))}>{name}</Link>
         </h2>
         <p className='place-card__type'>{type}</p>
       </div>
