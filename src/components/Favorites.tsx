@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 
 import { Place } from '../types';
-import { FAVORITE_PLACES } from '../data';
-import PlaceCard from './PlaceCard';
 import { Paths } from '../enums/paths';
+import PlaceCard from './PlaceCard';
+import { FAVORITE_PLACES } from '../mocks/favorites';
 
 const filterFavoritePlacesByCity = (city: string, data: Place[]) => {
   const filteredPlaces = data.filter((place: Place) => place.city === city);

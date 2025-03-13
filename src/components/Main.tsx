@@ -1,6 +1,6 @@
-import { PLACES } from '../data';
 import { Place } from '../types';
 import PlaceCard from './PlaceCard';
+import { PLACES } from '../mocks/places';
 
 export default function Main() {
   return (
