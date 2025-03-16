@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
-import { AuthStatus, Paths } from '../enums/paths';
+import { Paths } from '../enums/paths';
+import { AuthStatus } from '../enums/auth';
 
 type PrivateRouteProps = {
   children: JSX.Element;
