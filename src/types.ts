@@ -8,3 +8,13 @@ export type Place = {
   type: string;
   isPremium?: boolean;
 };
+
+export type StarRating = {
+  value: string;
+  title: string;
+};
+
+export type ReviewFormData = {
+  rating: string;
+  review: string;
+};

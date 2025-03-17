@@ -1,11 +1,12 @@
 import { Navigate } from 'react-router-dom';
 import { Paths } from '../enums/paths';
+import { AuthStatus } from '../enums/auth';
 
 type PrivateRouteProps = {
   children: JSX.Element;
-  hasAccess?: boolean;
+  hasAccess?: AuthStatus;
 };
 
-export default function PrivateRoute({ children, hasAccess = false }: PrivateRouteProps) {
-  return hasAccess ? children : <Navigate to={Paths.Login} />;
+export default function PrivateRoute({ children, hasAccess = AuthStatus.NoAuth }: PrivateRouteProps) {
+  return hasAccess === AuthStatus.Auth ? children : <Navigate to={Paths.Login} />;
 }
