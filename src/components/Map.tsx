@@ -1,27 +1,24 @@
+import { useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useRef } from 'react';
 import { Icon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { City, Place } from '../types';
 import useMap from '../hooks/useMap';
+import { Paths } from '../enums/paths';
+import { City, Place } from '../types';
 
 import IconPoint from '../../public/img/pin.svg';
 import IconPointActive from '../../public/img/pin-active.svg';
-import { useLocation, useParams } from 'react-router-dom';
-import { Paths } from '../enums/paths';
-import { MapClass } from '../enums/mapClass';
 
 type MapProps = {
   points: Place[];
+  id?: string;
 };
 
-export default function Map(points: MapProps) {
-  const { id } = useParams();
-  const { pathname } = useLocation();
-  const typePathname = pathname as Paths;
-  const activeOfferPath = Paths.Offer.replace(':id', String(id)) as Paths;
-  const isMain = typePathname === Paths.Main;
-  const isOffer = typePathname === activeOfferPath;
+export default function Map({points, id}: MapProps) {
+  const { pathname } = useLocation() as { pathname: Paths };
+  const isMain = pathname === Paths.Main;
+  const isOffer = pathname === Paths.Offer.replace(':id', String(id)) as Paths;
 
   const mapRef = useRef(null);
   const city: City = {
@@ -34,7 +31,7 @@ export default function Map(points: MapProps) {
   };
   const map = useMap(mapRef, city);
 
-  const activePointRef = useRef<Marker | null>(null);
+  const activePointRef = useRef<Marker>();
 
   const handlePointClick = useCallback((clickedMarker: Marker) => {
     if (activePointRef.current && activePointRef.current !== clickedMarker) {
@@ -59,7 +56,7 @@ export default function Map(points: MapProps) {
   useEffect(() => {
     if (map) {
       const layer = layerGroup();
-      points.points.forEach((point: Place) => {
+      points.forEach((point: Place) => {
         const marker = new Marker({
           lat: point.coordinates.lat,
           lng: point.coordinates.lng,
@@ -78,5 +75,5 @@ export default function Map(points: MapProps) {
     }
   }, [map, handlePointClick, points]);
 
-  return <section ref={mapRef} className={`map ${isMain ? MapClass.Main : ''} ${isOffer ? MapClass.Offer : ''}`}></section>;
+  return <section ref={mapRef} className={`map ${isMain ? 'cities__map' : ''} ${isOffer ? 'offer__map' : ''}`}></section>;
 }

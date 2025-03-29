@@ -1,20 +1,20 @@
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Place } from '../types';
 import { AuthStatus } from '../enums/auth';
-import ReviewsUser from './ReviewsUser';
-import ReviewsForm from './ReviewsForm';
-import PageNotFound from './PageNotFound';
 import { PLACES } from '../mocks/places';
 import { Review, reviews } from '../mocks/reviews';
 import Map from './Map';
 import NearPlaces from './NearPlaces';
 import OfferGallery from './OfferGallery';
+import ReviewsUser from './ReviewsUser';
+import ReviewsForm from './ReviewsForm';
+import PageNotFound from './PageNotFound';
 
 export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
   const { id } = useParams();
-  const data = PLACES.filter((place: Place) => place.id === +id!)[0];
-  const nearPlaces = PLACES.filter((place: Place) => place.id !== +id!);
+  const data = useMemo(() => PLACES.find((place: Place) => place.id === Number(id)), [id]);
 
   if (!data) {
     return <PageNotFound />;
@@ -23,9 +23,8 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
   return (
     <main className='page__main page__main--offer'>
       <section className='offer'>
-        <div className='offer__gallery-container container'>
-          <OfferGallery />
-        </div>
+        <OfferGallery />
+
         <div className='offer__container container'>
           <div className='offer__wrapper'>
             {data.isPremium && (
@@ -102,10 +101,11 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
             </section>
           </div>
         </div>
-        <Map points={nearPlaces} />
+
+        <Map points={PLACES} id={id} />
       </section>
       <div className='container'>
-        <NearPlaces />
+        <NearPlaces data={PLACES} />
       </div>
     </main>
   );
