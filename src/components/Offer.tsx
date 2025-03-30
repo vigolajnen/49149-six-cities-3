@@ -4,19 +4,18 @@ import { useParams } from 'react-router-dom';
 import { Place } from '../types';
 import { AuthStatus } from '../enums/auth';
 import { PLACES } from '../mocks/places';
-import { Review, reviews } from '../mocks/reviews';
 import Map from './Map';
+import Reviews from './Reviews';
 import NearPlaces from './NearPlaces';
 import OfferGallery from './OfferGallery';
-import ReviewsUser from './ReviewsUser';
-import ReviewsForm from './ReviewsForm';
 import PageNotFound from './PageNotFound';
 
 export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
   const { id } = useParams();
-  const data = useMemo(() => PLACES.find((place: Place) => place.id === Number(id)), [id]);
+  const currentPlace = useMemo(() => PLACES.find((place: Place) => place.id === Number(id)), [id]);
+  const nearPlaces = useMemo(() => PLACES.filter((place: Place) => place.id !== Number(id)), [id]);
 
-  if (!data) {
+  if (!currentPlace) {
     return <PageNotFound />;
   }
 
@@ -27,13 +26,13 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
 
         <div className='offer__container container'>
           <div className='offer__wrapper'>
-            {data.isPremium && (
+            {currentPlace.isPremium && (
               <div className='offer__mark'>
                 <span>Premium</span>
               </div>
             )}
             <div className='offer__name-wrapper'>
-              <h1 className='offer__name'>{data.name}</h1>
+              <h1 className='offer__name'>{currentPlace.name}</h1>
               <button className='offer__bookmark-button button' type='button'>
                 <svg className='offer__bookmark-icon' width='31' height='33'>
                   <use xlinkHref='#icon-bookmark'></use>
@@ -43,7 +42,7 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
             </div>
             <div className='offer__rating rating'>
               <div className='offer__stars rating__stars'>
-                <span style={{ width: data.rating }}></span>
+                <span style={{ width: currentPlace.rating }}></span>
                 <span className='visually-hidden'>Rating</span>
               </div>
               <span className='offer__rating-value rating__value'>4.8</span>
@@ -54,7 +53,7 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
               <li className='offer__feature offer__feature--adults'>Max 4 adults</li>
             </ul>
             <div className='offer__price'>
-              <b className='offer__price-value'>&euro;{data.price}</b>
+              <b className='offer__price-value'>&euro;{currentPlace.price}</b>
               <span className='offer__price-text'>&nbsp;night</span>
             </div>
             <div className='offer__inside'>
@@ -88,24 +87,14 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
                 </p>
               </div>
             </div>
-            <section className='offer__reviews reviews'>
-              <h2 className='reviews__title'>
-                Reviews &middot; <span className='reviews__amount'>{reviews.length}</span>
-              </h2>
-              <ul className='reviews__list'>
-                {reviews.map((review: Review) => (
-                  <ReviewsUser name={review.user.name} rating={review.rating.toString()} review={review.comment} time={review.date} key={review.id} />
-                ))}
-              </ul>
-              {hasAccess === AuthStatus.Auth ? <ReviewsForm /> : null}
-            </section>
+            <Reviews hasAccess={hasAccess} />
           </div>
         </div>
 
-        <Map points={PLACES} id={id} />
+        <Map points={nearPlaces} id={id} />
       </section>
       <div className='container'>
-        <NearPlaces data={PLACES} />
+        <NearPlaces data={nearPlaces} />
       </div>
     </main>
   );
