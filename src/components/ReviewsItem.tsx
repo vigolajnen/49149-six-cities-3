@@ -16,7 +16,7 @@ function formatDate(dateString: string): string {
 
   return `${monthName} ${year}`;
 }
-export default function ReviewsUser({ name, rating = '80', review, time = '2019-04-24', avatar = 'img/avatar-max.jpg' }: FeedbackUserProps) {
+export default function ReviewsItem({ name, rating = '80', review, time = '2019-04-24', avatar = 'img/avatar-max.jpg' }: FeedbackUserProps) {
   return (
     <li className='reviews__item'>
       <div className='reviews__user user'>
