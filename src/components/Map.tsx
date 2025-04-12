@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 
 import useMap from '../hooks/useMap';
 import { Paths } from '../enums/paths';
-import { CityPlace } from '../types';
+import { Place } from '../types';
 
 import IconPoint from '../../public/img/pin.svg';
 import IconPointActive from '../../public/img/pin-active.svg';
@@ -14,7 +14,7 @@ import { useTypedSelector } from '../hooks/useTypedSelector';
 import useScrollTo from '../hooks/useScrollTo';
 
 type MapProps = {
-  points: CityPlace[];
+  points: Place[];
   id?: string;
 };
 
@@ -24,7 +24,7 @@ export default function Map({ points, id }: MapProps) {
   const isOffer = pathname === (Paths.Offer.replace(':id', String(id)) as Paths);
   const { city: activeCity } = points[0];
   const { setActivePointPlace } = useTypedActions();
-  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: CityPlace } }) => state.app.activePointPlace);
+  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
   const { scrollToElement } = useScrollTo();
 
   const mapRef = useRef(null);
@@ -52,7 +52,7 @@ export default function Map({ points, id }: MapProps) {
       activePointRef.current = clickedMarker;
 
       const clickedLatitude = clickedMarker.getLatLng().lat;
-      const currentPointPlace = points.find((point: CityPlace) => point.location.latitude === clickedLatitude) as CityPlace;
+      const currentPointPlace = points.find((point: Place) => point.location.latitude === clickedLatitude) as Place;
       setActivePointPlace(currentPointPlace);
       scrollToElement(currentPointPlace.id);
     },
@@ -62,7 +62,7 @@ export default function Map({ points, id }: MapProps) {
   useEffect(() => {
     if (map && points) {
       const layer = layerGroup();
-      points.forEach((point: CityPlace) => {
+      points.forEach((point: Place) => {
         const marker = new Marker({
           lat: point.location.latitude,
           lng: point.location.longitude,

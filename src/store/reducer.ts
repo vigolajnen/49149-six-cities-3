@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { PLACES } from '../mocks/places';
-import { CityPlace } from '../types';
+import { Place } from '../types';
 
 const initialState = {
   activeCity: 'Paris',
-  activeCityPlaces: PLACES.filter((city: CityPlace) => city.city.name === 'Amsterdam'),
-  activePointPlace: {} as CityPlace,
+  activeCityPlaces: PLACES.filter((city: Place) => city.city.name === 'Amsterdam'),
+  activePointPlace: {} as Place,
 };
 
 export const appSlice = createSlice({
@@ -20,7 +20,7 @@ export const appSlice = createSlice({
       state.activeCityPlaces = PLACES.filter((city) => city.city.name === action.payload);
     },
 
-    setActivePointPlace: (state, action: PayloadAction<CityPlace>) => {
+    setActivePointPlace: (state, action: PayloadAction<Place>) => {
       state.activePointPlace = action.payload;
     },
   },

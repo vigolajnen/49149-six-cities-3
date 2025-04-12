@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
-import { CityPlace } from '../types';
+import { Place } from '../types';
 import { Paths } from '../enums/paths';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useTypedActions } from '../hooks/useTypedActions';
 
 type CardProps = {
-  card: CityPlace;
+  card: Place;
   styled?: string;
   isBookmarkActive?: boolean;
 };
@@ -15,7 +15,7 @@ type CardProps = {
 export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = false }: CardProps): JSX.Element {
   const { title: name, price, rating, type, previewImage: poster, isPremium, id } = card;
   const [hasHoverClass, setHasHoverClass] = useState(false);
-  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: CityPlace } }) => state.app.activePointPlace);
+  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
   const { setActivePointPlace } = useTypedActions();
 
   const handleMouseOver = () => {

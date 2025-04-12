@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { CityPlace } from '../types';
+import { Place } from '../types';
 import { AuthStatus } from '../enums/auth';
 import Map from './Map';
 import Reviews from './Reviews';
@@ -12,9 +12,9 @@ import { useTypedSelector } from '../hooks/useTypedSelector';
 
 export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
   const { id } = useParams();
-  const activeCityPlaces = useTypedSelector((state: { app: { activeCityPlaces: CityPlace[] } }) => state.app.activeCityPlaces);
-  const currentPlace = useMemo(() => activeCityPlaces.find((place: CityPlace) => place.id === id), [id, activeCityPlaces]);
-  const nearPlaces = useMemo(() => activeCityPlaces.filter((place: CityPlace) => place.id !== id), [id, activeCityPlaces]);
+  const activeCityPlaces = useTypedSelector((state: { app: { activeCityPlaces: Place[] } }) => state.app.activeCityPlaces);
+  const currentPlace = useMemo(() => activeCityPlaces.find((place: Place) => place.id === id), [id, activeCityPlaces]);
+  const nearPlaces = useMemo(() => activeCityPlaces.filter((place: Place) => place.id !== id), [id, activeCityPlaces]);
 
   if (!currentPlace) {
     return <PageNotFound />;

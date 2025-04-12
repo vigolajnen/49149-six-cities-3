@@ -1,4 +1,4 @@
-import { CityPlace } from '../types';
+import { Place } from '../types';
 import PlaceCard from './PlaceCard';
 
 import Map from './Map';
@@ -6,7 +6,7 @@ import CitiesMenu from './CitiesMenu';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 
 export default function Main() {
-  const activeCityPlaces = useTypedSelector((state: { app: { activeCityPlaces: CityPlace[] } }) => state.app.activeCityPlaces);
+  const activeCityPlaces = useTypedSelector((state: { app: { activeCityPlaces: Place[] } }) => state.app.activeCityPlaces);
   const activeCity = useTypedSelector((state: { app: { activeCity: string } }) => state.app.activeCity);
 
   return (
@@ -46,7 +46,7 @@ export default function Main() {
               </ul>
             </form>
             <div className='cities__places-list places__list tabs__content'>
-              {activeCityPlaces.map((place: CityPlace) => (
+              {activeCityPlaces.map((place: Place) => (
                 <PlaceCard key={place.id} card={place} />
               ))}
             </div>
