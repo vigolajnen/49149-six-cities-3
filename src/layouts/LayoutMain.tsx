@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
+
 import Header from '../components/Header';
 import { Paths } from '../enums/paths';
 import { AuthStatus } from '../enums/auth';
