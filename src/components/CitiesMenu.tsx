@@ -16,15 +16,9 @@ export default function CitiesMenu() {
       <ul className='locations__list tabs__list'>
         {cities.map((city: string) => (
           <li className='locations__item' key={city}>
-            {city === activeCity ? (
-              <a className='locations__item-link tabs__item tabs__item--active' onClick={() => handleClick({ city })}>
-                <span>{city}</span>
-              </a>
-            ) : (
-              <a className='locations__item-link tabs__item' href='#' onClick={() => handleClick({ city })}>
-                <span>{city}</span>
-              </a>
-            )}
+            <a href='#' className={`locations__item-link tabs__item ${city === activeCity ? 'tabs__item--active' : ''}`} onClick={() => handleClick({ city })}>
+              <span>{city}</span>
+            </a>
           </li>
         ))}
       </ul>

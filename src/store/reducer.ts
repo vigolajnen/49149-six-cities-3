@@ -5,7 +5,7 @@ import { Place } from '../types';
 
 const initialState = {
   activeCity: 'Paris',
-  activeCityPlaces: PLACES.filter((city: Place) => city.city.name === 'Amsterdam'),
+  activeCityPlaces: PLACES.filter((place: Place) => place.city.name === 'Paris'),
   activePointPlace: {} as Place,
 };
 
@@ -17,7 +17,7 @@ export const appSlice = createSlice({
       state.activeCity = action.payload;
     },
     setActiveCityPlaces: (state, action: PayloadAction<string>) => {
-      state.activeCityPlaces = PLACES.filter((city) => city.city.name === action.payload);
+      state.activeCityPlaces = PLACES.filter((place) => place.city.name === action.payload);
     },
 
     setActivePointPlace: (state, action: PayloadAction<Place>) => {

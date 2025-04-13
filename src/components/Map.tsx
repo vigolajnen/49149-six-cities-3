@@ -52,7 +52,8 @@ export default function Map({ points, id }: MapProps) {
       activePointRef.current = clickedMarker;
 
       const clickedLatitude = clickedMarker.getLatLng().lat;
-      const currentPointPlace = points.find((point: Place) => point.location.latitude === clickedLatitude) as Place;
+      const clickedLongitude = clickedMarker.getLatLng().lng;
+      const currentPointPlace = points.find((point: Place) => point.location.latitude === clickedLatitude && point.location.longitude === clickedLongitude) as Place;
       setActivePointPlace(currentPointPlace);
       scrollToElement(currentPointPlace.id);
     },
@@ -69,7 +70,7 @@ export default function Map({ points, id }: MapProps) {
         });
 
         let iconUrl = IconPoint;
-        if (point.id === activePointPlace?.id) {
+        if (point.id === activePointPlace?.id || id === point.id) {
           iconUrl = IconPointActive;
         }
 
@@ -85,7 +86,7 @@ export default function Map({ points, id }: MapProps) {
       });
       map.addLayer(layer);
     }
-  }, [map, handlePointClick, points, activePointPlace]);
+  }, [map, handlePointClick, points, activePointPlace, id]);
 
   return <section ref={mapRef} className={`map ${isMain ? 'cities__map' : ''} ${isOffer ? 'offer__map' : ''}`}></section>;
 }

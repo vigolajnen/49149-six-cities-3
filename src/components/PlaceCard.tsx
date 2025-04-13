@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Place } from '../types';
 import { Paths } from '../enums/paths';
@@ -13,9 +13,10 @@ type CardProps = {
 };
 
 export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = false }: CardProps): JSX.Element {
-  const { title: name, price, rating, type, previewImage: poster, isPremium, id } = card;
-  const [hasHoverClass, setHasHoverClass] = useState(false);
   const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
+  const { title: name, price, rating, type, previewImage: poster, isPremium, id } = card;
+  const styledRating = useMemo(() => Math.round(rating * 100) / 5, [rating]);
+  const [hasHoverClass, setHasHoverClass] = useState(false);
   const { setActivePointPlace } = useTypedActions();
 
   const handleMouseOver = () => {
@@ -25,10 +26,7 @@ export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = 
 
   const handleMouseOut = () => {
     setHasHoverClass(false);
-  };
-
-  const handleClick = () => {
-    setActivePointPlace(card);
+    setActivePointPlace({} as Place);
   };
 
   return (
@@ -39,7 +37,7 @@ export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = 
         </div>
       )}
       <div className={`${styled}__image-wrapper place-card__image-wrapper`}>
-        <Link to={Paths.Offer.replace(':id', String(id))} style={{ opacity: hasHoverClass ? 0.5 : 1 }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} onClick={handleClick}>
+        <Link to={Paths.Offer.replace(':id', String(id))} style={{ opacity: hasHoverClass ? 0.5 : 1 }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
           <img className='place-card__image' src={poster} width={styled === 'favorites' ? '150' : '260'} height={styled === 'favorites' ? '110' : '200'} alt='Place image' />
         </Link>
       </div>
@@ -58,7 +56,7 @@ export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = 
         </div>
         <div className='place-card__rating rating'>
           <div className='place-card__stars rating__stars'>
-            <span style={{ width: rating * 12 }}></span>
+            <span style={{ width: `${styledRating}%` }}></span>
             <span className='visually-hidden'>Rating</span>
           </div>
         </div>
