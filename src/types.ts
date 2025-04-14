@@ -1,18 +1,24 @@
-export type Coordinates = {
-  lat: number;
-  lng: number;
+export type Location = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+};
+export type City = {
+  name: string;
+  location: Location;
 };
 
 export type Place = {
-  id: number;
-  city: string;
-  name: string;
-  poster: string;
-  price: number;
-  rating: string;
+  id: string;
+  title: string;
   type: string;
-  isPremium?: boolean;
-  coordinates: Coordinates;
+  price: number;
+  city: City;
+  isFavorite: boolean;
+  isPremium: boolean;
+  rating: number;
+  previewImage: string;
+  location: Location;
 };
 
 export type StarRating = {
@@ -23,10 +29,4 @@ export type StarRating = {
 export type ReviewFormData = {
   rating: string;
   review: string;
-};
-
-export type City = {
-  name: string;
-  center: Coordinates;
-  zoom: number;
 };

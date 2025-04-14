@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+
 import { Place } from '../types';
 import { Paths } from '../enums/paths';
-import { useState } from 'react';
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useTypedActions } from '../hooks/useTypedActions';
 
 type CardProps = {
   card: Place;
@@ -10,18 +13,24 @@ type CardProps = {
 };
 
 export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = false }: CardProps): JSX.Element {
-  const { name, price, rating, type, poster, isPremium, id } = card;
+  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
+  const { title: name, price, rating, type, previewImage: poster, isPremium, id } = card;
+  const styledRating = useMemo(() => Math.round(rating * 100) / 5, [rating]);
   const [hasHoverClass, setHasHoverClass] = useState(false);
+  const { setActivePointPlace } = useTypedActions();
 
   const handleMouseOver = () => {
     setHasHoverClass(true);
+    setActivePointPlace(card);
   };
 
   const handleMouseOut = () => {
     setHasHoverClass(false);
+    setActivePointPlace({} as Place);
   };
+
   return (
-    <article className={`${styled}__card place-card`}>
+    <article className={`${styled}__card place-card`} id={id}>
       {isPremium && (
         <div className='place-card__mark'>
           <span>Premium</span>
@@ -47,12 +56,12 @@ export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = 
         </div>
         <div className='place-card__rating rating'>
           <div className='place-card__stars rating__stars'>
-            <span style={{ width: rating }}></span>
+            <span style={{ width: `${styledRating}%` }}></span>
             <span className='visually-hidden'>Rating</span>
           </div>
         </div>
         <h2 className='place-card__name'>
-          <Link to={Paths.Offer.replace(':id', String(id))} style={{ color: hasHoverClass ? 'red' : 'inherit' }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+          <Link to={Paths.Offer.replace(':id', String(id))} style={{ color: activePointPlace?.id === id ? 'red' : 'inherit' }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
             {name}
           </Link>
         </h2>

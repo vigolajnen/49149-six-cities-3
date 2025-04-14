@@ -6,7 +6,7 @@ import PlaceCard from './PlaceCard';
 import { FAVORITE_PLACES } from '../mocks/favorites';
 
 const filterFavoritePlacesByCity = (city: string, data: Place[]) => {
-  const filteredPlaces = data.filter((place: Place) => place.city === city);
+  const filteredPlaces = data.filter((place: Place) => place.city.name === city);
   return filteredPlaces;
 };
 
@@ -31,7 +31,7 @@ export default function Favorites() {
                 </div>
                 <div className='favorites__places'>
                   {amsterdamFavorites.map((place: Place) => (
-                    <PlaceCard key={place.name} card={place} styled='favorites' isBookmarkActive />
+                    <PlaceCard key={place.id} card={place} styled='favorites' isBookmarkActive />
                   ))}
                 </div>
               </li>
@@ -46,7 +46,7 @@ export default function Favorites() {
                 </div>
                 <div className='favorites__places'>
                   {cologneFavorites.map((place: Place) => (
-                    <PlaceCard key={place.name} card={place} styled='favorites' isBookmarkActive />
+                    <PlaceCard key={place.id} card={place} styled='favorites' isBookmarkActive />
                   ))}
                 </div>
               </li>
