@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useCallback, useEffect, useRef } from 'react';
 import { Icon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -19,17 +19,20 @@ type MapProps = {
 };
 
 export default function Map({ points, id }: MapProps) {
+  const { city } = useParams();
+  const { scrollToElement } = useScrollTo();
   const { pathname } = useLocation() as { pathname: Paths };
-  const isMain = pathname === Paths.Main;
-  const isOffer = pathname === (Paths.Offer.replace(':id', String(id)) as Paths);
-  const { city: activeCity } = points[0];
+
+  const isOffer = pathname === (Paths.Offer.replace(':city', String(city)).replace(':id', String(id)) as Paths);
+
   const { setActivePointPlace } = useTypedActions();
   const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
-  const { scrollToElement } = useScrollTo();
+  const activeCity = useTypedSelector((state: { app: { activeCity: string } }) => state.app.activeCity);
+  const activeCityLocation = points.find((point: Place) => point.city.name.toLowerCase() === activeCity.toLowerCase())?.city.location;
 
   const mapRef = useRef(null);
-  const map = useMap(mapRef, activeCity.location);
   const activePointRef = useRef<Marker>();
+  const map = useMap(mapRef, activeCityLocation ?? { latitude: 0, longitude: 0, zoom: 0 });
 
   const handlePointClick = useCallback(
     (clickedMarker: Marker) => {
@@ -61,7 +64,7 @@ export default function Map({ points, id }: MapProps) {
   );
 
   useEffect(() => {
-    if (map && points) {
+    if (map && points && activeCityLocation) {
       const layer = layerGroup();
       points.forEach((point: Place) => {
         const marker = new Marker({
@@ -86,7 +89,7 @@ export default function Map({ points, id }: MapProps) {
       });
       map.addLayer(layer);
     }
-  }, [map, handlePointClick, points, activePointPlace, id]);
+  }, [map, handlePointClick, points, activeCityLocation, activePointPlace, id]);
 
-  return <section ref={mapRef} className={`map ${isMain ? 'cities__map' : ''} ${isOffer ? 'offer__map' : ''}`}></section>;
+  return <section ref={mapRef} className={`map ${isOffer ? 'offer__map' : 'cities__map'}`}></section>;
 }

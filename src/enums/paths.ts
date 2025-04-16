@@ -1,6 +1,7 @@
 export enum Paths {
   Main = '/',
+  MainCity = '/:city',
   Login = '/login',
   Favorites = '/favorites',
-  Offer = '/offer/:id',
+  Offer = '/:city/offer/:id',
 }
