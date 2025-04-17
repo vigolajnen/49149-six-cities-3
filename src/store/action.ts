@@ -1,7 +1,8 @@
-import { changeCity, setActiveCityPlaces, setActivePointPlace } from './reducer';
+import { changeCity, setActiveCityPlaces, setActivePointPlace, setSortedPlaces } from './reducer';
 
 export const allActions = {
   changeCity,
   setActiveCityPlaces,
   setActivePointPlace,
+  setSortedPlaces,
 };

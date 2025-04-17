@@ -4,8 +4,9 @@ import { PLACES } from '../mocks/places';
 import { Place } from '../types';
 
 const initialState = {
-  activeCity: 'Paris',
-  activeCityPlaces: PLACES.filter((place: Place) => place.city.name === 'Paris'),
+  activeCity: '',
+  activeCityPlaces: [] as Place[],
+  sortedCityPlaces: [] as Place[],
   activePointPlace: {} as Place,
 };
 
@@ -15,9 +16,13 @@ export const appSlice = createSlice({
   reducers: {
     changeCity: (state, action: PayloadAction<string>) => {
       state.activeCity = action.payload;
+      state.sortedCityPlaces = [];
     },
     setActiveCityPlaces: (state, action: PayloadAction<string>) => {
-      state.activeCityPlaces = PLACES.filter((place) => place.city.name === action.payload);
+      state.activeCityPlaces = PLACES.filter((place: Place) => place.city.name.toLowerCase() === action.payload.toLowerCase());
+    },
+    setSortedPlaces: (state, action: PayloadAction<Place[]>) => {
+      state.sortedCityPlaces = [...action.payload];
     },
 
     setActivePointPlace: (state, action: PayloadAction<Place>) => {
@@ -26,5 +31,5 @@ export const appSlice = createSlice({
   },
 });
 
-export const { changeCity, setActiveCityPlaces, setActivePointPlace } = appSlice.actions;
+export const { changeCity, setActiveCityPlaces, setActivePointPlace, setSortedPlaces } = appSlice.actions;
 export default appSlice.reducer;

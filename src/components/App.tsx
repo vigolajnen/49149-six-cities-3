@@ -16,6 +16,7 @@ export default function App(): JSX.Element {
       <Routes>
         <Route path={Paths.Main} element={<LayoutMain />}>
           <Route index path={Paths.Main} element={<Main />} />
+          <Route path={Paths.MainCity} element={<Main />} />
           <Route path={Paths.Login} element={<Login />} />
           <Route
             path={Paths.Favorites}

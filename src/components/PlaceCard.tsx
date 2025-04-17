@@ -14,10 +14,11 @@ type CardProps = {
 
 export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = false }: CardProps): JSX.Element {
   const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
-  const { title: name, price, rating, type, previewImage: poster, isPremium, id } = card;
+  const { title: name, price, rating, type, previewImage: poster, isPremium, id, city } = card;
   const styledRating = useMemo(() => Math.round(rating * 100) / 5, [rating]);
   const [hasHoverClass, setHasHoverClass] = useState(false);
   const { setActivePointPlace } = useTypedActions();
+  const linkPath = Paths.Offer.replace(':city', String(city.name.toLocaleLowerCase())).replace(':id', String(id));
 
   const handleMouseOver = () => {
     setHasHoverClass(true);
@@ -37,7 +38,7 @@ export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = 
         </div>
       )}
       <div className={`${styled}__image-wrapper place-card__image-wrapper`}>
-        <Link to={Paths.Offer.replace(':id', String(id))} style={{ opacity: hasHoverClass ? 0.5 : 1 }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+        <Link to={linkPath} style={{ opacity: hasHoverClass ? 0.5 : 1 }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
           <img className='place-card__image' src={poster} width={styled === 'favorites' ? '150' : '260'} height={styled === 'favorites' ? '110' : '200'} alt='Place image' />
         </Link>
       </div>
@@ -61,7 +62,7 @@ export default function PlaceCard({ card, styled = 'cities', isBookmarkActive = 
           </div>
         </div>
         <h2 className='place-card__name'>
-          <Link to={Paths.Offer.replace(':id', String(id))} style={{ color: activePointPlace?.id === id ? 'red' : 'inherit' }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+          <Link to={linkPath} style={{ color: activePointPlace?.id === id ? 'red' : 'inherit' }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
             {name}
           </Link>
         </h2>
