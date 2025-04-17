@@ -13,20 +13,14 @@ const useSortingOptions = (data: Place[]) => {
   const { setSortedPlaces } = useTypedActions();
   const currentCity = useTypedSelector((state: { app: { activeCity: string } }) => state.app.activeCity);
 
-  const setSortName = (option: string): string => {
-    switch (option) {
-      case 'lowHigh':
-        return 'Price: low to high';
-      case 'highLow':
-        return 'Price: high to low';
-      case 'topRated':
-        return 'Top rated first';
-      case '':
-        return 'Popular';
-      default:
-        return 'Popular';
-    }
+  const sortNameMap: Record<string, string> = {
+    lowHigh: 'Price: low to high',
+    highLow: 'Price: high to low',
+    topRated: 'Top rated first',
+    '': 'Popular',
   };
+
+  const setSortName = (option: string): string => sortNameMap[option] ?? 'Popular';
 
   // Метод сортировки данных по заданному критерию
   const setSortedPlacesByOption = (option: string) => {
