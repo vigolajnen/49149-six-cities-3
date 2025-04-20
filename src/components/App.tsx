@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Main from './Main';
@@ -8,9 +9,24 @@ import PrivateRoute from './PrivateRoute';
 import PageNotFound from './PageNotFound';
 import LayoutMain from '../layouts/LayoutMain';
 import { Paths } from '../enums/paths';
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useTypedActions } from '../hooks/useTypedActions';
+import { getToken } from '../services/token';
 import { AuthStatus } from '../enums/auth';
 
 export default function App(): JSX.Element {
+  const authorizationStatus = useTypedSelector((state) => state.app.authorizationStatus);
+  const { setAuthorizationStatus } = useTypedActions();
+  const token = getToken();
+
+  useEffect(() => {
+    if (token) {
+      setAuthorizationStatus(AuthStatus.Auth);
+    } else {
+      setAuthorizationStatus(AuthStatus.NoAuth);
+    }
+  }, [token]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -21,12 +37,12 @@ export default function App(): JSX.Element {
           <Route
             path={Paths.Favorites}
             element={
-              <PrivateRoute>
+              <PrivateRoute hasAccess={authorizationStatus}>
                 <Favorites />
               </PrivateRoute>
             }
           />
-          <Route path={Paths.Offer} element={<Offer hasAccess={AuthStatus.NoAuth} />} />
+          <Route path={Paths.Offer} element={<Offer hasAccess={authorizationStatus} />} />
           <Route path='*' element={<PageNotFound />} />
         </Route>
       </Routes>

@@ -4,9 +4,9 @@ import { AuthStatus } from '../enums/auth';
 
 type PrivateRouteProps = {
   children: JSX.Element;
-  hasAccess?: AuthStatus;
+  hasAccess: AuthStatus;
 };
 
-export default function PrivateRoute({ children, hasAccess = AuthStatus.NoAuth }: PrivateRouteProps) {
+export default function PrivateRoute({ children, hasAccess }: PrivateRouteProps) {
   return hasAccess === AuthStatus.Auth ? children : <Navigate to={Paths.Login} />;
 }

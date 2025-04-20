@@ -10,16 +10,14 @@ export default function CitiesMenu() {
 
   const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
   const activeCity = useTypedSelector((state: { app: { activeCity: string } }) => state.app.activeCity);
-  const { changeCity, setActiveCityPlaces } = useTypedActions();
+  const { changeCity } = useTypedActions();
 
   const handleClick = () => {
     changeCity(paramCity ?? 'Paris');
-    setActiveCityPlaces(paramCity ?? 'Paris');
   };
 
   useEffect(() => {
     changeCity(paramCity ?? 'Paris');
-    setActiveCityPlaces(paramCity ?? 'Paris');
   }, [paramCity]);
 
   return (

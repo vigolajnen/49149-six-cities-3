@@ -1,12 +1,33 @@
 import { Link, useLocation } from 'react-router-dom';
+
 import { Paths } from '../enums/paths';
 import { AuthStatus } from '../enums/auth';
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { dropToken } from '../services/token';
+import { useTypedActions } from '../hooks/useTypedActions';
+import { User } from '../types';
+import { useLogoutUserMutation } from '../services/api';
 
 export default function Header({ hasAccess }: { hasAccess: AuthStatus }) {
   const { pathname } = useLocation();
   const typePathname = pathname as Paths;
   const isMain = typePathname === Paths.Main;
   const isLogin = typePathname === Paths.Login;
+  const user = useTypedSelector((state) => state.app.user);
+  const { setUser, setAuthorizationStatus } = useTypedActions();
+  const [logoutUser, { isLoading }] = useLogoutUserMutation();
+
+  const handleLogout = () => {
+    try {
+      logoutUser().unwrap();
+      dropToken();
+      setAuthorizationStatus(AuthStatus.NoAuth);
+      setUser({} as User);
+    } catch (error) {
+      // console.error('Ошибка при выходе:', error);
+    }
+  };
+
   return (
     <header className='header'>
       <div className='container'>
@@ -25,20 +46,20 @@ export default function Header({ hasAccess }: { hasAccess: AuthStatus }) {
           {isLogin ? null : (
             <nav className='header__nav'>
               <ul className='header__nav-list'>
-                {hasAccess === AuthStatus.Auth ? (
+                {hasAccess === AuthStatus.Auth && user ? (
                   <>
                     <li className='header__nav-item user'>
-                      <a className='header__nav-link header__nav-link--profile' href='#'>
-                        <div className='header__avatar-wrapper user__avatar-wrapper'></div>
-                        <span className='header__user-name user__name'>Oliver.conner@gmail.com</span>
+                      <Link className='header__nav-link header__nav-link--profile' to={Paths.Favorites}>
+                        <div className='header__avatar-wrapper user__avatar-wrapper' style={{ backgroundImage: `url(${user.avatarUrl})` }}></div>
+                        <span className='header__user-name user__name'>{user.email ?? 'Oliver.conner@gmail.com'}</span>
                         <span className='header__favorite-count'>3</span>
-                      </a>
+                      </Link>
                     </li>
 
                     <li className='header__nav-item'>
-                      <a className='header__nav-link' href='#'>
+                      <Link to={Paths.Main} onClick={handleLogout} className={`header__nav-link ${isLoading ? 'header__nav-link--disabled' : ''}`}>
                         <span className='header__signout'>Sign out</span>
-                      </a>
+                      </Link>
                     </li>
                   </>
                 ) : (
