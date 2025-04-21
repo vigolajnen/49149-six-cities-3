@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -6,43 +7,42 @@ import { useTypedActions } from '../hooks/useTypedActions';
 import { AuthStatus } from '../enums/auth';
 import { saveToken } from '../services/token';
 import { ApiError } from '../types';
-import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [loginUser, { isLoading, isSuccess }] = useLoginUserMutation();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
   const loginRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const { setAuthorizationStatus, setUser } = useTypedActions();
 
-  if (isSuccess) {
-    setAuthorizationStatus(AuthStatus.Auth);
-  }
-
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmitAsync = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
+
     if (!loginRef.current || !passwordRef.current) {
       return;
     }
 
-    const credentials = {
-      email: loginRef.current.value,
-      password: passwordRef.current.value,
-    };
+    try {
+      const credentials = {
+        email: loginRef.current.value,
+        password: passwordRef.current.value,
+      };
 
-    loginUser(credentials)
-      .unwrap()
-      .then((result) => {
-        setAuthorizationStatus(AuthStatus.Auth);
-        saveToken(result.token);
-        setUser(result);
-        navigate('/');
-      })
-      .catch((error: ApiError) => {
-        const firstMessage = error.data?.details?.[0]?.messages?.[0];
-        toast.error(firstMessage || 'Произошла непредвиденная ошибка.');
-      });
+      const result = await loginUser(credentials).unwrap();
+      setAuthorizationStatus(AuthStatus.Auth);
+      saveToken(result.token);
+      setUser(result);
+      navigate('/');
+    } catch (error) {
+      const apiError = error as ApiError;
+      const firstMessage = apiError.data?.details?.[0]?.messages?.[0];
+      toast.error(firstMessage || 'Произошла непредвиденная ошибка.');
+    }
+  };
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    void handleFormSubmitAsync(event);
   };
 
   return (

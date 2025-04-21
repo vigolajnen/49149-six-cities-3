@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
 
 import { Place } from '../types';
@@ -12,7 +11,6 @@ import { useGetOffersQuery } from '../services/api';
 import Spinner from './Spinner';
 
 export default function Main() {
-  const { city: paramCity } = useParams();
   const { setActiveCityPlaces } = useTypedActions();
   const activeCityPlaces = useTypedSelector((state: { app: { activeCityPlaces: Place[] } }) => state.app.activeCityPlaces);
   const sortedCityPlaces = useTypedSelector((state: { app: { sortedCityPlaces: Place[] } }) => state.app.sortedCityPlaces);
@@ -22,10 +20,10 @@ export default function Main() {
   const { data: offers, isLoading } = useGetOffersQuery();
 
   useEffect(() => {
-    if (offers && !isLoading) {
+    if (offers && !isLoading && activeCity) {
       setActiveCityPlaces(offers);
     }
-  }, [!!offers, isLoading, paramCity]);
+  }, [!!offers, isLoading, activeCity]);
 
   if (isLoading) {
     return (
