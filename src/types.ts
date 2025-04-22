@@ -1,3 +1,4 @@
+
 export type Location = {
   latitude: number;
   longitude: number;
@@ -30,3 +31,31 @@ export type ReviewFormData = {
   rating: string;
   review: string;
 };
+
+export type User = {
+  name: string;
+  avatarUrl: string;
+  isPro: boolean;
+  email: string;
+  token: string;
+};
+
+export type AuthCredentials = {
+  email: string;
+  password: string;
+};
+
+export type AuthResponse = {
+  token: string;
+  expiresAt: string;
+};
+
+export type ApiError = {
+  data?: {
+    details?: {
+      messages?: string[];
+    }[];
+  };
+};
+
+export type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';

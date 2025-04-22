@@ -1,19 +1,65 @@
+import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+
+import { useLoginUserMutation } from '../services/api';
+import { useTypedActions } from '../hooks/useTypedActions';
+import { AuthStatus } from '../enums/auth';
+import { saveToken } from '../services/token';
+import { ApiError } from '../types';
+
 export default function Login() {
+  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const loginRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+
+  const { setAuthorizationStatus, setUser } = useTypedActions();
+
+  const handleFormSubmitAsync = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault();
+
+    if (!loginRef.current || !passwordRef.current) {
+      return;
+    }
+
+    try {
+      const credentials = {
+        email: loginRef.current.value,
+        password: passwordRef.current.value,
+      };
+
+      const result = await loginUser(credentials).unwrap();
+      setAuthorizationStatus(AuthStatus.Auth);
+      saveToken(result.token);
+      setUser(result);
+      navigate('/');
+    } catch (error) {
+      const apiError = error as ApiError;
+      const firstMessage = apiError.data?.details?.[0]?.messages?.[0];
+      toast.error(firstMessage || 'Произошла непредвиденная ошибка.');
+    }
+  };
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    void handleFormSubmitAsync(event);
+  };
+
   return (
     <main className='page__main page__main--login'>
       <div className='page__login-container container'>
         <section className='login'>
           <h1 className='login__title'>Sign in</h1>
-          <form className='login__form form' action='#' method='post'>
+          <form className='login__form form' action='#' method='post' onSubmit={handleFormSubmit}>
             <div className='login__input-wrapper form__input-wrapper'>
               <label className='visually-hidden'>E-mail</label>
-              <input className='login__input form__input' type='email' name='email' placeholder='Email' required />
+              <input ref={loginRef} className='login__input form__input' type='email' name='email' placeholder='Email' required />
             </div>
             <div className='login__input-wrapper form__input-wrapper'>
               <label className='visually-hidden'>Password</label>
-              <input className='login__input form__input' type='password' name='password' placeholder='Password' required />
+              <input ref={passwordRef} className='login__input form__input' type='password' name='password' placeholder='Password' required />
             </div>
-            <button className='login__submit form__submit button' type='submit'>
+            <button className='login__submit form__submit button' type='submit' disabled={isLoading}>
               Sign in
             </button>
           </form>
@@ -26,6 +72,7 @@ export default function Login() {
           </div>
         </section>
       </div>
+      <ToastContainer />
     </main>
   );
 }

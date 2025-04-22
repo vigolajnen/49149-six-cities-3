@@ -60,7 +60,7 @@ export default function Map({ points, id }: MapProps) {
       setActivePointPlace(currentPointPlace);
       scrollToElement(currentPointPlace.id);
     },
-    [points, setActivePointPlace, scrollToElement],
+    [points, scrollToElement],
   );
 
   useEffect(() => {

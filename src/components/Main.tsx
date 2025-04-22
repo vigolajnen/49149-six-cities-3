@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
 
 import { Place } from '../types';
@@ -8,24 +7,31 @@ import CitiesMenu from './CitiesMenu';
 import SortingOptions from './SortingOptions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useTypedActions } from '../hooks/useTypedActions';
+import { useGetOffersQuery } from '../services/api';
+import Spinner from './Spinner';
 
 export default function Main() {
-  const { city: paramCity } = useParams();
   const { setActiveCityPlaces } = useTypedActions();
   const activeCityPlaces = useTypedSelector((state: { app: { activeCityPlaces: Place[] } }) => state.app.activeCityPlaces);
   const sortedCityPlaces = useTypedSelector((state: { app: { sortedCityPlaces: Place[] } }) => state.app.sortedCityPlaces);
   const activeCity = useTypedSelector((state: { app: { activeCity: string } }) => state.app.activeCity);
   const dataCityPlaces = useMemo(() => (sortedCityPlaces.length > 0 ? sortedCityPlaces : activeCityPlaces), [sortedCityPlaces, activeCityPlaces]);
 
-  useEffect(() => {
-    setActiveCityPlaces(paramCity ?? 'Paris');
-  }, [paramCity]);
+  const { data: offers, isLoading } = useGetOffersQuery();
 
-  if (activeCityPlaces.length === 0) {
+  useEffect(() => {
+    if (offers && !isLoading && activeCity) {
+      setActiveCityPlaces(offers);
+    }
+  }, [!!offers, isLoading, activeCity]);
+
+  if (isLoading) {
     return (
       <main className='page__main page__main--index'>
         <h1 className='visually-hidden'>Cities</h1>
         <CitiesMenu />
+
+        <Spinner/>
       </main>
     );
   }
@@ -37,6 +43,7 @@ export default function Main() {
       <div className='tabs'>
         <CitiesMenu />
       </div>
+
       <div className='cities'>
         <div className='cities__places-container container'>
           <section className='cities__places places'>
