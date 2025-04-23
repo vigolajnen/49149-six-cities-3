@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-
+import { ToastContainer } from 'react-toastify';
 import { useLoginUserMutation } from '../services/api';
 import { useTypedActions } from '../hooks/useTypedActions';
 import { AuthStatus } from '../enums/auth';
 import { saveToken } from '../services/token';
 import { ApiError } from '../types';
+import { handleError } from '../services/errorHandler';
 
 export default function Login() {
   const [loginUser, { isLoading }] = useLoginUserMutation();
@@ -35,9 +35,8 @@ export default function Login() {
       setUser(result);
       navigate('/');
     } catch (error) {
-      const apiError = error as ApiError;
-      const firstMessage = apiError.data?.details?.[0]?.messages?.[0];
-      toast.error(firstMessage || 'Произошла непредвиденная ошибка.');
+      const typeError = error as ApiError;
+      handleError({ error: typeError, setAuthorizationStatus, setUser });
     }
   };
 
