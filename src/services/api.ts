@@ -7,7 +7,7 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: axiosBaseQuery(),
   keepUnusedDataFor: 30,
-  tagTypes: ['Offers', 'Favorite'],
+  tagTypes: ['Offers', 'Favorite', 'Auth'],
   endpoints: (builder) => ({
     getOffers: builder.query<Place[], void>({
       query: () => ({ url: '/offers', method: 'GET' }),
@@ -17,8 +17,9 @@ export const api = createApi({
       query: () => ({ url: '/favorite', method: 'GET' }),
       providesTags: ['Favorite'],
     }),
-    getLogin: builder.query<void, void>({
+    getLogin: builder.query<User, void>({
       query: () => ({ url: '/login', method: 'GET' }),
+      providesTags: ['Auth'],
     }),
     loginUser: builder.mutation<User, AuthCredentials>({
       query: (credentials: AuthCredentials) => ({
@@ -26,6 +27,7 @@ export const api = createApi({
         method: 'POST',
         body: credentials,
       }),
+      invalidatesTags: ['Auth'],
     }),
     logoutUser: builder.mutation<void, void>({
       query: () => ({
@@ -36,4 +38,4 @@ export const api = createApi({
   }),
 });
 
-export const { useGetOffersQuery, useGetFavoriteQuery, useGetLoginQuery, useLoginUserMutation, useLogoutUserMutation } = api;
+export const { useGetOffersQuery, useGetFavoriteQuery, useGetLoginQuery, useLoginUserMutation, useLogoutUserMutation, useLazyGetLoginQuery } = api;

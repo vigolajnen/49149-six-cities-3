@@ -13,11 +13,15 @@ import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useTypedActions } from '../hooks/useTypedActions';
 import { getToken } from '../services/token';
 import { AuthStatus } from '../enums/auth';
+import { useGetLoginQuery } from '../services/api';
+import { handleError } from '../services/errorHandler';
 
 export default function App(): JSX.Element {
   const authorizationStatus = useTypedSelector((state) => state.app.authorizationStatus);
-  const { setAuthorizationStatus } = useTypedActions();
+  const { setAuthorizationStatus, setUser } = useTypedActions();
   const token = getToken();
+
+  const { data, isLoading, isSuccess, isError, error } = useGetLoginQuery(undefined, { skip: !token });
 
   useEffect(() => {
     if (token) {
@@ -25,7 +29,17 @@ export default function App(): JSX.Element {
     } else {
       setAuthorizationStatus(AuthStatus.NoAuth);
     }
-  }, [token]);
+  }, [token, setAuthorizationStatus]);
+
+  useEffect(() => {
+    if (!isLoading && isSuccess && data) {
+      setUser(data);
+    }
+
+    if (isError) {
+      handleError({ error, setAuthorizationStatus, setUser });
+    }
+  }, [isLoading, isSuccess, data, setUser, isError, error, setAuthorizationStatus]);
 
   return (
     <BrowserRouter>

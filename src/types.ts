@@ -1,4 +1,3 @@
-
 export type Location = {
   latitude: number;
   longitude: number;
@@ -55,6 +54,14 @@ export type ApiError = {
     details?: {
       messages?: string[];
     }[];
+  };
+};
+
+export type ErrorWithStatus = {
+  status?: number;
+  data: {
+    message?: string;
+    error?: string;
   };
 };
 

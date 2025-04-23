@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Paths } from '../enums/paths';
 import { AuthStatus } from '../enums/auth';
 import { useTypedSelector } from '../hooks/useTypedSelector';
-import { dropToken } from '../services/token';
+import { dropToken, getToken } from '../services/token';
 import { useTypedActions } from '../hooks/useTypedActions';
 import { User } from '../types';
 import { useLogoutUserMutation } from '../services/api';
@@ -16,6 +16,7 @@ export default function Header({ hasAccess }: { hasAccess: AuthStatus }) {
   const user = useTypedSelector((state) => state.app.user);
   const { setUser, setAuthorizationStatus } = useTypedActions();
   const [logoutUser, { isLoading }] = useLogoutUserMutation();
+  const token = getToken();
 
   const handleLogout = () => {
     try {
@@ -46,12 +47,12 @@ export default function Header({ hasAccess }: { hasAccess: AuthStatus }) {
           {isLogin ? null : (
             <nav className='header__nav'>
               <ul className='header__nav-list'>
-                {hasAccess === AuthStatus.Auth && user ? (
+                {hasAccess === AuthStatus.Auth && token ? (
                   <>
                     <li className='header__nav-item user'>
                       <Link className='header__nav-link header__nav-link--profile' to={Paths.Favorites}>
-                        <div className='header__avatar-wrapper user__avatar-wrapper' style={{ backgroundImage: `url(${user.avatarUrl})` }}></div>
-                        <span className='header__user-name user__name'>{user.email ?? 'Oliver.conner@gmail.com'}</span>
+                        <div className='header__avatar-wrapper user__avatar-wrapper' style={{ backgroundImage: `url(${user?.avatarUrl})` }}></div>
+                        <span className='header__user-name user__name'>{user?.email ?? '...'}</span>
                         <span className='header__favorite-count'>3</span>
                       </Link>
                     </li>
