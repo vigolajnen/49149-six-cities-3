@@ -5,7 +5,7 @@ import { AuthStatus } from '../enums/auth';
 
 const initialState = {
   authorizationStatus: AuthStatus.Unknown,
-  user: {} as User,
+  user: null as User | null,
   activeCity: '',
   activeCityPlaces: [] as Place[],
   sortedCityPlaces: [] as Place[],
@@ -19,7 +19,7 @@ export const appSlice = createSlice({
     setAuthorizationStatus: (state, action: PayloadAction<AuthStatus>) => {
       state.authorizationStatus = action.payload;
     },
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
     },
     changeCity: (state, action: PayloadAction<string>) => {

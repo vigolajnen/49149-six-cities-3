@@ -8,7 +8,7 @@ import { dropToken } from '../services/token';
 export type HandleErrorOptions = {
   error: ErrorWithStatus | SerializedError | ApiError;
   setAuthorizationStatus: (authStatus: AuthStatus) => void;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
 };
 
 export function handleError(options: HandleErrorOptions): void {
@@ -20,7 +20,7 @@ export function handleError(options: HandleErrorOptions): void {
       case 401:
         dropToken();
         setAuthorizationStatus(AuthStatus.NoAuth);
-        setUser({} as User);
+        setUser(null);
         toast.error('Ошибка авторизации.');
         break;
       case 400:

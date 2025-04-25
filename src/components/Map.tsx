@@ -27,12 +27,10 @@ export default function Map({ points, id }: MapProps) {
 
   const { setActivePointPlace } = useTypedActions();
   const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
-  const activeCity = useTypedSelector((state: { app: { activeCity: string } }) => state.app.activeCity);
-  const activeCityLocation = points.find((point: Place) => point.city.name.toLowerCase() === activeCity.toLowerCase())?.city.location;
 
   const mapRef = useRef(null);
   const activePointRef = useRef<Marker>();
-  const map = useMap(mapRef, activeCityLocation ?? { latitude: 0, longitude: 0, zoom: 0 });
+  const map = useMap(mapRef, points);
 
   const handlePointClick = useCallback(
     (clickedMarker: Marker) => {
@@ -64,7 +62,7 @@ export default function Map({ points, id }: MapProps) {
   );
 
   useEffect(() => {
-    if (map && points && activeCityLocation) {
+    if (map && points) {
       const layer = layerGroup();
       points.forEach((point: Place) => {
         const marker = new Marker({
@@ -89,7 +87,7 @@ export default function Map({ points, id }: MapProps) {
       });
       map.addLayer(layer);
     }
-  }, [map, handlePointClick, points, activeCityLocation, activePointPlace, id]);
+  }, [map, handlePointClick, points, activePointPlace, id]);
 
   return <section ref={mapRef} className={`map ${isOffer ? 'offer__map' : 'cities__map'}`}></section>;
 }

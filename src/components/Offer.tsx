@@ -10,22 +10,27 @@ import OfferGallery from './OfferGallery';
 import PageNotFound from './PageNotFound';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useTypedActions } from '../hooks/useTypedActions';
+import { useGetNearbyOffersQuery, useGetOffersQuery } from '../services/api';
+import Spinner from './Spinner';
 
 export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
   const { id } = useParams();
-  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
-  const activeCityPlaces = useTypedSelector((state: { app: { activeCityPlaces: Place[] } }) => state.app.activeCityPlaces);
-  const nearPlaces = useMemo(() => activeCityPlaces.filter((place: Place) => place.id !== id), [id, activeCityPlaces]);
-  const styledRating = useMemo(() => Math.round(activePointPlace.rating * 100) / 5, [activePointPlace?.rating]);
   const { setActivePointPlace } = useTypedActions();
+  const { data: offers, isLoading } = useGetOffersQuery();
+  const { data: nearPlaces, isLoading: isNearLoading } = useGetNearbyOffersQuery(id as string);
+  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
+  const styledRating = useMemo(() => Math.round(activePointPlace.rating * 100) / 5, [activePointPlace?.rating]);
 
   useEffect(() => {
-    if (Number(activePointPlace.id) !== Number(id)) {
-      setActivePointPlace(activeCityPlaces.find((place: Place) => place.id === id) as Place);
+    if (offers && !isLoading) {
+      setActivePointPlace(offers.find((place: Place) => place.id === id) as Place);
     }
-  }, [id, activeCityPlaces, setActivePointPlace, activePointPlace.id]);
+  }, [id, offers]);
 
-  if (!activePointPlace) {
+  if (!nearPlaces || !offers) {
+    if (isNearLoading || isLoading) {
+      return <Spinner />;
+    }
     return <PageNotFound />;
   }
 
@@ -101,7 +106,7 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
           </div>
         </div>
 
-        {activeCityPlaces.length > 0 ? <Map points={activeCityPlaces} id={id} /> : null}
+        {nearPlaces.length > 0 ? <Map points={nearPlaces} id={id} /> : null}
       </section>
       <div className='container'>
         <NearPlaces data={nearPlaces} />

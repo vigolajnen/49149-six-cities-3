@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 type FeedbackUserProps = {
   avatar?: string;
   name: string;
@@ -17,6 +19,8 @@ function formatDate(dateString: string): string {
   return `${monthName} ${year}`;
 }
 export default function ReviewsItem({ name, rating = '80', review, time = '2019-04-24', avatar = 'img/avatar-max.jpg' }: FeedbackUserProps) {
+  const styledRating = useMemo(() => Math.round(Number(rating) * 100) / 5, [rating]);
+
   return (
     <li className='reviews__item'>
       <div className='reviews__user user'>
@@ -28,7 +32,7 @@ export default function ReviewsItem({ name, rating = '80', review, time = '2019-
       <div className='reviews__info'>
         <div className='reviews__rating rating'>
           <div className='reviews__stars rating__stars'>
-            <span style={{ width: `${rating}%` }}></span>
+            <span style={{ width: `${styledRating}%` }}></span>
             <span className='visually-hidden'>Rating</span>
           </div>
         </div>

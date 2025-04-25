@@ -17,7 +17,7 @@ export default function Main() {
   const activeCity = useTypedSelector((state: { app: { activeCity: string } }) => state.app.activeCity);
   const dataCityPlaces = useMemo(() => (sortedCityPlaces.length > 0 ? sortedCityPlaces : activeCityPlaces), [sortedCityPlaces, activeCityPlaces]);
 
-  const { data: offers, isLoading } = useGetOffersQuery();
+  const { data: offers, isLoading } = useGetOffersQuery(undefined, { refetchOnMountOrArgChange: true });
 
   useEffect(() => {
     if (offers && !isLoading && activeCity) {
@@ -31,7 +31,7 @@ export default function Main() {
         <h1 className='visually-hidden'>Cities</h1>
         <CitiesMenu />
 
-        <Spinner/>
+        <Spinner />
       </main>
     );
   }
@@ -59,7 +59,7 @@ export default function Main() {
             </div>
           </section>
           <div className='cities__right-section'>
-            <Map points={activeCityPlaces} />
+            {activeCityPlaces && activeCityPlaces.length > 0 && <Map points={activeCityPlaces} />}
           </div>
         </div>
       </div>
