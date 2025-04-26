@@ -1,4 +1,3 @@
-
 export type Location = {
   latitude: number;
   longitude: number;
@@ -58,4 +57,24 @@ export type ApiError = {
   };
 };
 
+export type ErrorWithStatus = {
+  status?: number;
+  data: {
+    message?: string;
+    error?: string;
+  };
+};
+
 export type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+export type Comment = {
+  id: string;
+  date: string;
+  user: {
+    name: string;
+    avatarUrl: string;
+    isPro: boolean;
+  };
+  comment: string;
+  rating: number;
+};

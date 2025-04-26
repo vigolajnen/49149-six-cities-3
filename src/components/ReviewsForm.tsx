@@ -1,11 +1,20 @@
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import RatingStars from './RatingStars';
+import { useAddCommentMutation } from '../services/api';
+import Spinner from './Spinner';
+
+import { ApiError } from '../types';
 
 export default function ReviewsForm() {
+  const { id } = useParams();
   const [rating, setRating] = useState<string>('0');
   const [review, setReview] = useState<string>('');
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
+  const [addComment, { isLoading }] = useAddCommentMutation();
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -17,16 +26,34 @@ export default function ReviewsForm() {
     }
   };
 
+  const resetForm = () => {
+    setRating('0');
+    setReview('');
+  };
+
   useEffect(() => {
     setIsDisabled(Number(rating) === 0 || review.length < 5);
   }, [rating, review]);
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmitAsync = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // console.log(`Rating: ${rating}, Review: ${review}`);
-    setRating('0');
-    setReview('');
+
+    try {
+      await addComment({ rating: Number(rating), comment: review, offerId: id }).unwrap();
+      resetForm();
+    } catch (error) {
+      const apiError = error as ApiError;
+      toast.error(apiError.data?.details?.[0]?.messages?.[0]);
+    }
   };
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    void handleFormSubmitAsync(event);
+  };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <form className='reviews__form form' action='#' method='post' onSubmit={handleFormSubmit}>
