@@ -17,7 +17,7 @@ export default function Header({ hasAccess }: { hasAccess: AuthStatus }) {
   const { setUser, setAuthorizationStatus } = useTypedActions();
   const [logoutUser, { isLoading }] = useLogoutUserMutation();
   const token = getToken();
-  const { data: favorites, isLoading: isLoadingFavorite } = useGetFavoriteQuery();
+  const { data: favorites, isLoading: isLoadingFavorite } = useGetFavoriteQuery(undefined, { skip: !user });
 
   const handleLogout = () => {
     try {
