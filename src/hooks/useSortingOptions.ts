@@ -32,6 +32,11 @@ const useSortingOptions = (data: Place[]) => {
       }
       setSearchParams(newSearchParams);
 
+      if (!data || data.length === 0) {
+        setSortedPlaces([]);
+        return;
+      }
+
       let sortedData = [];
       switch (option) {
         case 'lowHigh':
@@ -54,8 +59,14 @@ const useSortingOptions = (data: Place[]) => {
   );
 
   useEffect(() => {
+    setActiveOption(sort);
+  }, [sort]);
+
+  useEffect(() => {
     if (sort) {
       setSortedPlacesByOption(sort);
+    } else {
+      setSortedPlaces(data || []);
     }
   }, [data]);
 

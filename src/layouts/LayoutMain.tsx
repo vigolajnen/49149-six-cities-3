@@ -1,5 +1,5 @@
-import { shallowEqual } from 'react-redux';
 import { useEffect, useMemo } from 'react';
+import { shallowEqual } from 'react-redux';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import Header from '../components/Header';
@@ -33,9 +33,7 @@ export default function LayoutMain() {
   }, [isMain, isMainCity, isLogin]);
 
   useEffect(() => {
-    if (pathname !== (window.location.pathname as Paths)) {
-      window.scrollTo(0, 0);
-    }
+    window.scrollTo(0, 0);
   }, [pathname]);
 
   return (

@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { Paths } from '../enums/paths';
 import { useTypedActions } from '../hooks/useTypedActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
-import { Paths } from '../enums/paths';
 
 export default function CitiesMenu() {
   const { city: paramCity } = useParams();

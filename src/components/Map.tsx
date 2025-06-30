@@ -1,17 +1,18 @@
-import { useLocation } from 'react-router-dom';
-import { memo, useCallback, useEffect, useRef } from 'react';
 import { Icon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { memo, useCallback, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import useMap from '../hooks/useMap';
 import { Paths } from '../enums/paths';
+import useMap from '../hooks/useMap';
 import { Place } from '../types';
 
-import IconPoint from '../../public/img/pin.svg';
-import IconPointActive from '../../public/img/pin-active.svg';
+import useScrollTo from '../hooks/useScrollTo';
 import { useTypedActions } from '../hooks/useTypedActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
-import useScrollTo from '../hooks/useScrollTo';
+import IconPointActive from '/img/pin-active.svg';
+import IconPoint from '/img/pin.svg';
+import { selectActivePointPlace } from '../store/selectors';
 
 type MapProps = {
   points: Place[];
@@ -31,17 +32,22 @@ const activeIcon = new Icon({
   iconAnchor: [20, 50],
 });
 
-new Image().src = IconPoint;
-new Image().src = IconPointActive;
+// Предзагрузка иконок для предотвращения проблем с отображением
+try {
+  new Image().src = IconPoint;
+  new Image().src = IconPointActive;
+} catch (error) {
+  // console.warn('Ошибка при загрузке иконок карты:', error);
+}
 
 function Map({ points, id, city }: MapProps) {
   const { scrollToElement } = useScrollTo();
   const { pathname } = useLocation() as { pathname: Paths };
   const isOffer = pathname === (Paths.Offer.replace(':city', String(city)).replace(':id', String(id)) as Paths);
   const { setActivePointPlace } = useTypedActions();
-  const activePointPlace = useTypedSelector((state) => state.app.activePointPlace);
+  const activePointPlace = useTypedSelector(selectActivePointPlace);
 
-  const mapRef = useRef(null);
+  const mapRef = useRef<HTMLDivElement>(null);
   const markersLayerRef = useRef<ReturnType<typeof layerGroup>>();
   const map = useMap(mapRef, points);
   const markersRef = useRef<Marker[]>([]);
@@ -55,21 +61,21 @@ function Map({ points, id, city }: MapProps) {
   );
 
   useEffect(() => {
-    if (!map || !Array.isArray(points)) {
+    if (!map || !Array.isArray(points) || points.length === 0) {
       return;
     }
 
-    // Удаление маркеров
-    markersRef.current.forEach((marker) => {
-      map.removeLayer(marker);
-    });
+    // Удаление существующих маркеров
+    if (markersLayerRef.current) {
+      map.removeLayer(markersLayerRef.current);
+    }
     markersRef.current = [];
 
     const layer = layerGroup();
     markersLayerRef.current = layer;
 
     points.forEach((point) => {
-      if (!point?.location) {
+      if (!point?.location?.latitude || !point?.location?.longitude) {
         return;
       }
 
@@ -85,7 +91,9 @@ function Map({ points, id, city }: MapProps) {
     map.addLayer(layer);
 
     return () => {
-      layer.remove();
+      if (markersLayerRef.current) {
+        map.removeLayer(markersLayerRef.current);
+      }
     };
   }, [map, points, activePointPlace?.id, id, handlePointClick]);
 
