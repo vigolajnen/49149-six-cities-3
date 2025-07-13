@@ -1,4 +1,4 @@
-import { Icon, Marker, layerGroup } from 'leaflet';
+import { DivIcon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -10,9 +10,9 @@ import { Place } from '../types';
 import useScrollTo from '../hooks/useScrollTo';
 import { useTypedActions } from '../hooks/useTypedActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
-import IconPointActive from '/img/pin-active.svg';
-import IconPoint from '/img/pin.svg';
 import { selectActivePointPlace } from '../store/selectors';
+
+import styles from '../styles/map.module.css';
 
 type MapProps = {
   points: Place[];
@@ -20,25 +20,14 @@ type MapProps = {
   city: string;
 };
 
-const defaultIcon = new Icon({
-  iconUrl: IconPoint,
-  iconSize: [32, 50],
-  iconAnchor: [20, 50],
-});
-
-const activeIcon = new Icon({
-  iconUrl: IconPointActive,
-  iconSize: [32, 50],
-  iconAnchor: [20, 50],
-});
-
-// Предзагрузка иконок для предотвращения проблем с отображением
-try {
-  new Image().src = IconPoint;
-  new Image().src = IconPointActive;
-} catch (error) {
-  // console.warn('Ошибка при загрузке иконок карты:', error);
-}
+// Единый SVG шаблон для всех маркеров
+const markerSvgTemplate = (isActive: boolean) => `
+  <svg width="27" height="39" xmlns="http://www.w3.org/2000/svg">
+    <path class="${isActive ? styles.markerPathActive : styles.markerPath}"
+          d="M23.856 17.929a11.733 11.733 0 0 0 1.213-5.196C25.07 6.253 19.816 1 13.336 1c-1.835 0-3.643.44-5.272 1.285C2.444 5.197.248 12.113 3.16 17.733l9.736 18.792a1 1 0 0 0 1.784-.017l9.176-18.58z"
+          fill-rule="evenodd"/>
+  </svg>
+`;
 
 function Map({ points, id, city }: MapProps) {
   const { scrollToElement } = useScrollTo();
@@ -79,8 +68,18 @@ function Map({ points, id, city }: MapProps) {
         return;
       }
 
+      const isActive = point.id === activePointPlace?.id || point.id === id;
+      const className = `custom-marker ${isActive ? 'active-marker' : ''}`;
+
+      const icon = new DivIcon({
+        html: markerSvgTemplate(isActive),
+        className: className,
+        iconSize: [32, 50],
+        iconAnchor: [16, 50],
+      });
+
       const marker = new Marker([point.location.latitude, point.location.longitude], {
-        icon: point.id === activePointPlace?.id || point.id === id ? activeIcon : defaultIcon,
+        icon: icon,
       });
 
       marker.on('click', () => handlePointClick(point));

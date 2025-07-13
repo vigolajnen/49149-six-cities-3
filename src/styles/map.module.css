@@ -1,0 +1,11 @@
+.markerPath {
+  fill: #4481C3;
+  stroke: white;
+  stroke-width: 2;
+}
+
+.markerPathActive {
+  fill: #e9640b;
+  stroke: white;
+  stroke-width: 2;
+}
