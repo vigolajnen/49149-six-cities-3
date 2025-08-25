@@ -1,17 +1,17 @@
 import { Link, useLocation } from 'react-router-dom';
 
-import { Paths } from '../enums/paths';
 import { AuthStatus } from '../enums/auth';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { dropToken, getToken } from '../services/token';
+import { Paths } from '../enums/paths';
 import { useTypedActions } from '../hooks/useTypedActions';
-import { User } from '../types';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useGetFavoriteQuery, useLogoutUserMutation } from '../services/api';
+import { dropToken, getToken } from '../services/token';
+import { User } from '../types';
 
 export default function Header({ hasAccess }: { hasAccess: AuthStatus }) {
   const { pathname } = useLocation();
   const typePathname = pathname as Paths;
-  const isMain = typePathname === Paths.Main;
+  const isMainPage = typePathname === Paths.Main;
   const isLogin = typePathname === Paths.Login;
   const user = useTypedSelector((state) => state.app.user);
   const { setUser, setAuthorizationStatus } = useTypedActions();
@@ -35,7 +35,7 @@ export default function Header({ hasAccess }: { hasAccess: AuthStatus }) {
       <div className='container'>
         <div className='header__wrapper'>
           <div className='header__left'>
-            {isMain ? (
+            {isMainPage ? (
               <a className='header__logo-link header__logo-link--active'>
                 <img className='header__logo' src='img/logo.svg' alt='6 cities logo' width='81' height='41' loading='lazy' />
               </a>

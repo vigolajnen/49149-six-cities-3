@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Place, User } from '../types';
+import { Place, storeInitialState, User } from '../types';
 import { AuthStatus } from '../enums/auth';
 
-const initialState = {
+
+const initialState: storeInitialState = {
   authorizationStatus: AuthStatus.Unknown,
-  user: null as User | null,
+  user: null,
   activeCity: '',
-  allPlaces: [] as Place[], // Храним все места
-  sortedCityPlaces: [] as Place[],
-  activePointPlace: {} as Place,
+  allPlaces: [], // Храним все места
+  sortedCityPlaces: [],
+  activePointPlace: null,
 };
 
 export const appSlice = createSlice({

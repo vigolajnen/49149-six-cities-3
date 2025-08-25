@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Place } from '../types';
 import { useTypedActions } from './useTypedActions';
 
-const useSortingOptions = (data: Place[]) => {
+const useSortingOptions = (data: Place[] = []) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get('sort') || '';
   const [activeOption, setActiveOption] = useState<string>(sort);
@@ -66,7 +66,7 @@ const useSortingOptions = (data: Place[]) => {
     if (sort) {
       setSortedPlacesByOption(sort);
     } else {
-      setSortedPlaces(data || []);
+      setSortedPlaces(data);
     }
   }, [data]);
 

@@ -9,7 +9,7 @@ import { selectActiveCity, selectAuthorizationStatus } from '../store/selectors'
 
 export default function LayoutMain() {
   const { pathname } = useLocation() as { pathname: Paths };
-  const isMain = pathname === Paths.Main;
+  const isMainPage = pathname === Paths.Main;
   const isLogin = pathname === Paths.Login;
 
   const { activeCity, authorizationStatus } = useTypedSelector(
@@ -24,13 +24,13 @@ export default function LayoutMain() {
 
   const pageClasses = useMemo(() => {
     const classes = ['page'];
-    if (isMain || isMainCity) {
+    if (isMainPage || isMainCity) {
       classes.push('page--gray', 'page--main');
     } else if (isLogin) {
       classes.push('page--gray', 'page--login');
     }
     return classes.join(' ');
-  }, [isMain, isMainCity, isLogin]);
+  }, [isMainPage, isMainCity, isLogin]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
