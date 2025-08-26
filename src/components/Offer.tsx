@@ -14,20 +14,24 @@ import { useGetNearbyOffersQuery, useGetOffersQuery, useToggleFavoriteMutation }
 import Spinner from './Spinner';
 
 export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
-  const { id } = useParams();
+  const { id, city } = useParams();
   const { setActivePointPlace } = useTypedActions();
   const { data: offers, isLoading } = useGetOffersQuery();
   const { data: nearPlaces, isLoading: isNearLoading } = useGetNearbyOffersQuery(id as string);
-  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
-  const styledRating = useMemo(() => Math.round(activePointPlace.rating * 100) / 5, [activePointPlace?.rating]);
+  const activePointPlace = useTypedSelector((state) => state.app.activePointPlace);
+  const styledRating = useMemo(() => activePointPlace && Math.round(activePointPlace?.rating * 100) / 5, [activePointPlace?.rating]);
 
   const [mapNearPlaces, setMapNearPlaces] = useState<Place[]>([]);
   const [isFavorite, setIsFavorite] = useState(activePointPlace?.isFavorite);
   const [toggleFavorite] = useToggleFavoriteMutation();
 
   const handleClick = () => {
+    if (!activePointPlace) {
+      return;
+    }
+
     setIsFavorite((prev) => !prev);
-    toggleFavorite({ status: activePointPlace.isFavorite ? 0 : 1, favorite: activePointPlace, offerId: String(id) });
+    toggleFavorite({ status: activePointPlace?.isFavorite ? 0 : 1, favorite: activePointPlace, offerId: String(id) });
   };
 
   useEffect(() => {
@@ -37,7 +41,7 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
   }, [id, offers, activePointPlace]);
 
   useEffect(() => {
-    if (nearPlaces) {
+    if (nearPlaces && activePointPlace) {
       const resultArray = [...nearPlaces.slice(0, 3), activePointPlace];
       setMapNearPlaces(resultArray);
     }
@@ -59,13 +63,13 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
 
         <div className='offer__container container'>
           <div className='offer__wrapper'>
-            {activePointPlace.isPremium && (
+            {activePointPlace?.isPremium && (
               <div className='offer__mark'>
                 <span>Premium</span>
               </div>
             )}
             <div className='offer__name-wrapper'>
-              <h1 className='offer__name'>{activePointPlace.title}</h1>
+              <h1 className='offer__name'>{activePointPlace?.title}</h1>
               <button className={`offer__bookmark-button button ${isFavorite ? 'offer__bookmark-button--active' : ''}`} type='button' onClick={handleClick}>
                 <svg className='offer__bookmark-icon' width='31' height='33'>
                   <use xlinkHref='#icon-bookmark'></use>
@@ -78,7 +82,7 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
                 <span style={{ width: `${styledRating}%` }}></span>
                 <span className='visually-hidden'>Rating</span>
               </div>
-              <span className='offer__rating-value rating__value'>{activePointPlace.rating}</span>
+              <span className='offer__rating-value rating__value'>{activePointPlace?.rating}</span>
             </div>
             <ul className='offer__features'>
               <li className='offer__feature offer__feature--entire'>Apartment</li>
@@ -86,7 +90,7 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
               <li className='offer__feature offer__feature--adults'>Max 4 adults</li>
             </ul>
             <div className='offer__price'>
-              <b className='offer__price-value'>&euro;{activePointPlace.price}</b>
+              <b className='offer__price-value'>&euro;{activePointPlace?.price}</b>
               <span className='offer__price-text'>&nbsp;night</span>
             </div>
             <div className='offer__inside'>
@@ -124,7 +128,7 @@ export default function Offer({ hasAccess }: { hasAccess: AuthStatus }) {
           </div>
         </div>
 
-        {mapNearPlaces.length > 0 ? <Map points={mapNearPlaces} id={id} /> : null}
+        {mapNearPlaces.length > 0 ? <Map points={mapNearPlaces} id={id} city={city!} /> : null}
       </section>
       <div className='container'>
         <NearPlaces data={mapNearPlaces.slice(0, 3)} />

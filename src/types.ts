@@ -1,3 +1,13 @@
+import { AuthStatus } from './enums/auth';
+
+export type storeInitialState = {
+  authorizationStatus: AuthStatus;
+  user: User | null;
+  activeCity: string;
+  allPlaces: Place[];
+  sortedCityPlaces: Place[];
+  activePointPlace: Place | null;
+};
 export type Location = {
   latitude: number;
   longitude: number;

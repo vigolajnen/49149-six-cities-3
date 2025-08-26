@@ -1,97 +1,102 @@
-import { useLocation, useParams } from 'react-router-dom';
-import { useCallback, useEffect, useRef } from 'react';
-import { Icon, Marker, layerGroup } from 'leaflet';
+import { DivIcon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { memo, useCallback, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import useMap from '../hooks/useMap';
 import { Paths } from '../enums/paths';
+import useMap from '../hooks/useMap';
 import { Place } from '../types';
 
-import IconPoint from '../../public/img/pin.svg';
-import IconPointActive from '../../public/img/pin-active.svg';
+import useScrollTo from '../hooks/useScrollTo';
 import { useTypedActions } from '../hooks/useTypedActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
-import useScrollTo from '../hooks/useScrollTo';
+import { selectActivePointPlace } from '../store/selectors';
+
+import styles from '../styles/map.module.css';
 
 type MapProps = {
   points: Place[];
   id?: string;
+  city: string;
 };
 
-export default function Map({ points, id }: MapProps) {
-  const { city } = useParams();
+// Единый SVG шаблон для всех маркеров
+const markerSvgTemplate = (isActive: boolean) => `
+  <svg width="27" height="39" xmlns="http://www.w3.org/2000/svg">
+    <path class="${isActive ? styles.markerPathActive : styles.markerPath}"
+          d="M23.856 17.929a11.733 11.733 0 0 0 1.213-5.196C25.07 6.253 19.816 1 13.336 1c-1.835 0-3.643.44-5.272 1.285C2.444 5.197.248 12.113 3.16 17.733l9.736 18.792a1 1 0 0 0 1.784-.017l9.176-18.58z"
+          fill-rule="evenodd"/>
+  </svg>
+`;
+
+function Map({ points, id, city }: MapProps) {
   const { scrollToElement } = useScrollTo();
   const { pathname } = useLocation() as { pathname: Paths };
-
   const isOffer = pathname === (Paths.Offer.replace(':city', String(city)).replace(':id', String(id)) as Paths);
-
   const { setActivePointPlace } = useTypedActions();
-  const activePointPlace = useTypedSelector((state: { app: { activePointPlace: Place } }) => state.app.activePointPlace);
+  const activePointPlace = useTypedSelector(selectActivePointPlace);
 
-  const mapRef = useRef(null);
-  const activePointRef = useRef<Marker>();
+  const mapRef = useRef<HTMLDivElement>(null);
+  const markersLayerRef = useRef<ReturnType<typeof layerGroup>>();
   const map = useMap(mapRef, points);
+  const markersRef = useRef<Marker[]>([]);
 
   const handlePointClick = useCallback(
-    (clickedMarker: Marker) => {
-      if (activePointRef.current && activePointRef.current !== clickedMarker) {
-        activePointRef.current.setIcon(
-          new Icon({
-            iconUrl: IconPoint,
-            iconSize: [32, 50],
-            iconAnchor: [20, 50],
-          }),
-        );
-      }
-
-      clickedMarker.setIcon(
-        new Icon({
-          iconUrl: IconPointActive,
-        }),
-      );
-
-      activePointRef.current = clickedMarker;
-
-      const clickedLatitude = clickedMarker.getLatLng().lat;
-      const clickedLongitude = clickedMarker.getLatLng().lng;
-      const currentPointPlace = points.find((point: Place) => point.location.latitude === clickedLatitude && point.location.longitude === clickedLongitude) as Place;
-      setActivePointPlace(currentPointPlace);
-      scrollToElement(currentPointPlace.id);
+    (point: Place) => {
+      setActivePointPlace(point);
+      scrollToElement(point.id);
     },
-    [points, scrollToElement],
+    [setActivePointPlace, scrollToElement],
   );
 
   useEffect(() => {
-    if (map && Array.isArray(points)) {
-      const layer = layerGroup();
-      points.forEach((point: Place) => {
-        if (!point?.location?.latitude || !point?.location?.longitude) {
-          return;
-        }
-
-        const marker = new Marker({
-          lat: point.location.latitude,
-          lng: point.location.longitude,
-        });
-
-        let iconUrl = IconPoint;
-        if (point.id === activePointPlace?.id || id === point.id) {
-          iconUrl = IconPointActive;
-        }
-
-        marker.setIcon(
-          new Icon({
-            iconUrl,
-            iconSize: [32, 50],
-            iconAnchor: [20, 50],
-          }),
-        );
-        marker.on('click', () => handlePointClick(marker));
-        layer.addLayer(marker);
-      });
-      map.addLayer(layer);
+    if (!map || !Array.isArray(points) || points.length === 0) {
+      return;
     }
-  }, [map, handlePointClick, points, activePointPlace, id]);
+
+    // Удаление существующих маркеров
+    if (markersLayerRef.current) {
+      map.removeLayer(markersLayerRef.current);
+    }
+    markersRef.current = [];
+
+    const layer = layerGroup();
+    markersLayerRef.current = layer;
+
+    points.forEach((point) => {
+      if (!point?.location?.latitude || !point?.location?.longitude) {
+        return;
+      }
+
+      const isActive = point.id === activePointPlace?.id || point.id === id;
+      const className = `custom-marker ${isActive ? 'active-marker' : ''}`;
+
+      const icon = new DivIcon({
+        html: markerSvgTemplate(isActive),
+        className: className,
+        iconSize: [32, 50],
+        iconAnchor: [16, 50],
+      });
+
+      const marker = new Marker([point.location.latitude, point.location.longitude], {
+        icon: icon,
+      });
+
+      marker.on('click', () => handlePointClick(point));
+      layer.addLayer(marker);
+      markersRef.current.push(marker);
+    });
+
+    map.addLayer(layer);
+
+    return () => {
+      if (markersLayerRef.current) {
+        map.removeLayer(markersLayerRef.current);
+      }
+    };
+  }, [map, points, activePointPlace?.id, id, handlePointClick]);
 
   return <section ref={mapRef} className={`map ${isOffer ? 'offer__map' : 'cities__map'}`}></section>;
 }
+
+export default memo(Map);
