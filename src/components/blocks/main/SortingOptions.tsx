@@ -1,9 +1,9 @@
 import { memo } from 'react';
 
-import useSortingOptions from '../hooks/useSortingOptions';
-import { useToggle } from '../hooks/useToggle';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { selectorActiveCityPlaces } from '../store/selectors';
+import useSortingOptions from '../../../hooks/useSortingOptions';
+import { useToggle } from '../../../hooks/useToggle';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
+import { selectorActiveCityPlaces } from '../../../store/selectors';
 
 function SortingOptions() {
   const activeCityPlaces = useTypedSelector(selectorActiveCityPlaces);

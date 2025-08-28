@@ -1,22 +1,22 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { AuthStatus } from '../enums/auth';
-import { Paths } from '../enums/paths';
-import { useTypedActions } from '../hooks/useTypedActions';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import LayoutMain from '../layouts/LayoutMain';
-import { useGetLoginQuery } from '../services/api';
-import { handleError } from '../services/errorHandler';
-import { getToken } from '../services/token';
-import Favorites from './Favorites';
-import Login from './Login';
-import Main from './Main';
-import Offer from './Offer';
-import PageNotFound from './PageNotFound';
-import PrivateRoute from './PrivateRoute';
-import Spinner from './Spinner';
-import { selectAuthorizationStatus } from '../store/selectors';
+import { AuthStatus } from '../../enums/auth';
+import { Paths } from '../../enums/paths';
+import { useTypedActions } from '../../hooks/useTypedActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import LayoutMain from '../../layouts/LayoutMain';
+import { useGetLoginQuery } from '../../services/api';
+import { handleError } from '../../services/errorHandler';
+import { getToken } from '../../services/token';
+import { selectAuthorizationStatus } from '../../store/selectors';
+import PrivateRoute from '../common/PrivateRoute';
+import Favorites from '../pages/Favorites';
+import Login from '../pages/Login';
+import Main from '../pages/Main';
+import PageNotFound from '../pages/NotFound';
+import Offer from '../pages/Offer';
+import Spinner from '../ui/Spinner';
 
 // 1. AuthStatus.Unknown
 // При первой загрузке (начальное состояние)

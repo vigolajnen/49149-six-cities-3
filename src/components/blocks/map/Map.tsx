@@ -1,18 +1,18 @@
 import { DivIcon, Marker, layerGroup } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { Paths } from '../enums/paths';
-import useMap from '../hooks/useMap';
-import { Place } from '../types';
+import { Paths } from '../../../enums/paths';
+import useMap from '../../../hooks/useMap';
+import { Place } from '../../../types';
 
-import useScrollTo from '../hooks/useScrollTo';
-import { useTypedActions } from '../hooks/useTypedActions';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { selectActivePointPlace } from '../store/selectors';
+import useScrollTo from '../../../hooks/useScrollTo';
+import { useTypedActions } from '../../../hooks/useTypedActions';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
+import { selectActivePointPlace } from '../../../store/selectors';
 
-import styles from '../styles/map.module.css';
+import 'leaflet/dist/leaflet.css';
+import styles from '../../../styles/map.module.css';
 
 type MapProps = {
   points: Place[];

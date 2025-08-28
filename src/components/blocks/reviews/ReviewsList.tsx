@@ -1,5 +1,4 @@
-
-import { Comment } from '../types';
+import { Comment } from '../../../types';
 import ReviewsItem from './ReviewsItem';
 
 export default function ReviewsList({ reviews }: { reviews: Comment[] }) {

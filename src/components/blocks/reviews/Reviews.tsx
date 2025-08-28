@@ -1,11 +1,11 @@
-import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { AuthStatus } from '../enums/auth';
+import { AuthStatus } from '../../../enums/auth';
+import { useGetOfferCommentsQuery } from '../../../services/api';
+import { Comment } from '../../../types';
 import ReviewsForm from './ReviewsForm';
 import ReviewsList from './ReviewsList';
-import { useGetOfferCommentsQuery } from '../services/api';
-import { Comment } from '../types';
 
 type ReviewsProps = {
   hasAccess: AuthStatus;

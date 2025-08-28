@@ -1,13 +1,14 @@
-import { Location, useLocation, useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
+import { Location, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { useLoginUserMutation } from '../services/api';
-import { useTypedActions } from '../hooks/useTypedActions';
-import { AuthStatus } from '../enums/auth';
-import { saveToken } from '../services/token';
-import { ApiError } from '../types';
-import { handleError } from '../services/errorHandler';
-import { Paths } from '../enums/paths';
+import { AuthStatus } from '../../enums/auth';
+import { Paths } from '../../enums/paths';
+import { useTypedActions } from '../../hooks/useTypedActions';
+import { useLoginUserMutation } from '../../services/api';
+import { handleError } from '../../services/errorHandler';
+import { saveToken } from '../../services/token';
+import { ApiError } from '../../types';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 
 type FromState = {
   from: string;
@@ -19,6 +20,8 @@ export default function Login() {
   const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const location = useLocation() as Location<FromState>;
+
+  const activeCity = useTypedSelector((state) => state.app.activeCity);
 
   const from = location.state?.from || Paths.Main;
   const { setAuthorizationStatus, setUser } = useTypedActions();
@@ -74,7 +77,7 @@ export default function Login() {
         <section className='locations locations--login locations--current'>
           <div className='locations__item'>
             <a className='locations__item-link' href='#'>
-              <span>Amsterdam</span>
+              <span>{activeCity ? activeCity : 'Amsterdam'}</span>
             </a>
           </div>
         </section>

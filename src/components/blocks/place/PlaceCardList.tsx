@@ -1,8 +1,8 @@
 import { memo } from 'react';
-import PlaceCard from './PlaceCard';
-import SortingOptions from './SortingOptions';
 
-import { Place } from '../types';
+import { Place } from '../../../types';
+import SortingOptions from '../main/SortingOptions';
+import PlaceCard from './PlaceCard';
 
 type PlaceCardListProps = {
   placesCount: number;
