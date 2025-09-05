@@ -1,6 +1,7 @@
 
 import { Fragment } from 'react';
-import { StarRating } from '../../types';
+
+import { StarRating } from '@/types';
 
 const ratingStars: StarRating[] = [
   { value: '5', title: 'perfect' },

@@ -14,7 +14,7 @@ export const api = createApi({
       keepUnusedDataFor: 0,
       providesTags: ['Offers'],
     }),
-    getOffer: builder.query<Place, string>({
+    getOffer: builder.query<Place, string | undefined>({
       query: (offerId) => ({ url: `/offers/${offerId}`, method: 'GET' }),
       providesTags: (offerId) => [{ type: 'Offer', offerId }],
     }),

@@ -1,5 +1,5 @@
-import { Place } from '../../../types';
-import PlaceCard from '../place/PlaceCard';
+import { Place } from '@/types';
+import PlaceCard from '@/components/blocks/place/PlaceCard';
 
 type NearPlacesProps = {
   data: Place[];

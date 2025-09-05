@@ -1,4 +1,7 @@
-export default function OfferMarkPremium({ isPremium = false }: { isPremium?: boolean }) {
+type OfferMarkPremiumProps = {
+  isPremium?: boolean;
+};
+export default function OfferMarkPremium({ isPremium = false }: OfferMarkPremiumProps) {
   if (!isPremium) {
     return null;
   }

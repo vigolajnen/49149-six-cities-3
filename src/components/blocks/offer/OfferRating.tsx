@@ -6,7 +6,7 @@ interface OfferRatingProps {
 }
 
 export default function OfferRating({ rating = 0, id }: OfferRatingProps) {
-  const styledRating = useMemo(() => id && Math.round(rating * 100) / 5, [rating]);
+  const styledRating = useMemo(() => !!id && Math.round(rating * 100) / 5, [rating, id]);
 
   return (
     <div className='offer__rating rating'>

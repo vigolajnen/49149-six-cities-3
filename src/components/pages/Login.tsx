@@ -1,14 +1,16 @@
 import { useRef } from 'react';
 import { Location, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { AuthStatus } from '../../enums/auth';
-import { Paths } from '../../enums/paths';
-import { useTypedActions } from '../../hooks/useTypedActions';
-import { useLoginUserMutation } from '../../services/api';
-import { handleError } from '../../services/errorHandler';
-import { saveToken } from '../../services/token';
-import { ApiError } from '../../types';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
+
+
+import { ApiError } from '@/types';
+import { Paths } from '@enums/paths';
+import { AuthStatus } from '@enums/auth';
+import { saveToken } from '@services/token';
+import { handleError } from '@services/errorHandler';
+import { useLoginUserMutation } from '@services/api';
+import { useTypedActions } from '@hooks/useTypedActions';
+import { useTypedSelector } from '@hooks/useTypedSelector';
 
 type FromState = {
   from: string;

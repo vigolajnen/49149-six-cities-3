@@ -2,10 +2,10 @@ import { useEffect, useMemo } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import Header from '../components/layout/Header';
-import { Paths } from '../enums/paths';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { selectActiveCity, selectAuthorizationStatus } from '../store/selectors';
+import Header from '@components/layout/Header';
+import { Paths } from '@enums/paths';
+import { useTypedSelector } from '@hooks/useTypedSelector';
+import { selectActiveCity, selectAuthorizationStatus } from '@store/selectors';
 
 export default function LayoutMain() {
   const { pathname } = useLocation() as { pathname: Paths };

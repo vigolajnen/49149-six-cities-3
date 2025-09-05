@@ -2,13 +2,13 @@ import { memo, useCallback, useState } from 'react';
 import { shallowEqual } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { AuthStatus } from '../../../enums/auth';
-import { Paths } from '../../../enums/paths';
-import { useTypedActions } from '../../../hooks/useTypedActions';
-import { useTypedSelector } from '../../../hooks/useTypedSelector';
-import { useToggleFavoriteMutation } from '../../../services/api';
-import { selectActivePointPlace, selectAuthorizationStatus } from '../../../store/selectors';
-import { Place } from '../../../types';
+import { Place } from '@/types';
+import { Paths } from '@enums/paths';
+import { AuthStatus } from '@enums/auth';
+import { useToggleFavoriteMutation } from '@services/api';
+import { useTypedActions } from '@hooks/useTypedActions';
+import { useTypedSelector } from '@hooks/useTypedSelector';
+import { selectActivePointPlace, selectAuthorizationStatus } from '@store/selectors';
 
 type CardProps = {
   card: Place;

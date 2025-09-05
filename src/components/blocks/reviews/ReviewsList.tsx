@@ -1,5 +1,5 @@
-import { Comment } from '../../../types';
-import ReviewsItem from './ReviewsItem';
+import { Comment } from '@/types';
+import ReviewsItem from '@/components/blocks/reviews/ReviewsItem';
 
 export default function ReviewsList({ reviews }: { reviews: Comment[] }) {
   return (

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Paths } from '../../enums/paths';
+
+import { Paths } from '@enums/paths';
 
 export default function PageNotFound() {
   return (
