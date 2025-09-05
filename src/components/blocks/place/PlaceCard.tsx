@@ -34,6 +34,8 @@ function PlaceCard({ card, styled = 'cities' }: CardProps): JSX.Element {
     shallowEqual, // Добавляем поверхностное сравнение
   );
 
+  const buttonClass = isFavorite && authorizationStatus === AuthStatus.Auth ? 'place-card__bookmark-button--active' : '';
+  const buttonLabel = isFavorite ? 'In bookmarks' : 'To bookmarks';
   const handleClick = () => {
     if (authorizationStatus !== AuthStatus.Auth) {
       navigate(Paths.Login);
@@ -71,15 +73,11 @@ function PlaceCard({ card, styled = 'cities' }: CardProps): JSX.Element {
             <b className='place-card__price-value'>&euro;{price}</b>
             <span className='place-card__price-text'>&#47;&nbsp;night</span>
           </div>
-          <button
-            className={`place-card__bookmark-button button ${isFavorite && authorizationStatus === AuthStatus.Auth ? 'place-card__bookmark-button--active' : ''}`}
-            type='button'
-            onClick={handleClick}
-          >
+          <button className={`place-card__bookmark-button button ${buttonClass}`} type='button' onClick={handleClick}>
             <svg className='place-card__bookmark-icon' width='18' height='19'>
               <use xlinkHref='#icon-bookmark'></use>
             </svg>
-            <span className='visually-hidden'>{isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
+            <span className='visually-hidden'>{buttonLabel}</span>
           </button>
         </div>
         <div className='place-card__rating rating'>

@@ -2,8 +2,6 @@ interface CitiesContainerProps {
   children: React.ReactNode;
 }
 
-const CitiesContainer = ({ children }: CitiesContainerProps) => {
+export default function CitiesContainer({ children }: CitiesContainerProps) {
   return <div className='cities'>{children}</div>;
-};
-
-export default CitiesContainer;
+}

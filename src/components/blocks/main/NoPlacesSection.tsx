@@ -2,7 +2,7 @@ interface NoPlacesSectionProps {
   activeCity: string;
 }
 
-const NoPlacesSection: React.FC<NoPlacesSectionProps> = ({ activeCity }) => {
+export default function NoPlacesSection({ activeCity }: NoPlacesSectionProps) {
   return (
     <section className='cities__no-places'>
       <div className='cities__status-wrapper tabs__content'>
@@ -11,6 +11,4 @@ const NoPlacesSection: React.FC<NoPlacesSectionProps> = ({ activeCity }) => {
       </div>
     </section>
   );
-};
-
-export default NoPlacesSection;
+}

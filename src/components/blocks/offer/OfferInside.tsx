@@ -9,7 +9,7 @@ export default function OfferInside({ amenities = DEFAULT_AMENITIES }: OfferInsi
     <div className='offer__inside'>
       <h2 className='offer__inside-title'>What&apos;s inside</h2>
       <ul className='offer__inside-list'>
-        {amenities.map(amenity => (
+        {amenities.map((amenity) => (
           <li key={amenity} className='offer__inside-item'>
             {amenity}
           </li>

@@ -1,7 +1,6 @@
-
 type FavoritesEmptyProps = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 export default function FavoritesEmpty({ children }: FavoritesEmptyProps) {
   return (
@@ -21,4 +20,3 @@ export default function FavoritesEmpty({ children }: FavoritesEmptyProps) {
     </div>
   );
 }
-
