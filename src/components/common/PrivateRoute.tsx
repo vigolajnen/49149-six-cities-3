@@ -1,7 +1,9 @@
 import { Location, Navigate, useLocation } from 'react-router-dom';
-import { Paths } from '../enums/paths';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { selectUser } from '../store/selectors';
+
+
+import { Paths } from '@enums/paths';
+import { useTypedSelector } from '@hooks/useTypedSelector';
+import { selectUser } from '@store/selectors';
 
 type PrivateRouteProps = {
   children: JSX.Element;

@@ -1,12 +1,12 @@
-import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import RatingStars from './RatingStars';
-import { useAddCommentMutation } from '../services/api';
-import Spinner from './Spinner';
+import { ApiError } from '@/types';
+import { useAddCommentMutation } from '@services/api';
+import RatingStars from '@/components/ui/RatingStars';
+import Spinner from '@/components/ui/Spinner';
 
-import { ApiError } from '../types';
 
 export default function ReviewsForm() {
   const { id } = useParams();

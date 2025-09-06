@@ -1,14 +1,14 @@
-import { shallowEqual } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { memo, useCallback, useState } from 'react';
+import { shallowEqual } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { Place } from '../types';
-import { Paths } from '../enums/paths';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { useTypedActions } from '../hooks/useTypedActions';
-import { useToggleFavoriteMutation } from '../services/api';
-import { AuthStatus } from '../enums/auth';
-import { selectActivePointPlace, selectAuthorizationStatus } from '../store/selectors';
+import { Place } from '@/types';
+import { Paths } from '@enums/paths';
+import { AuthStatus } from '@enums/auth';
+import { useToggleFavoriteMutation } from '@services/api';
+import { useTypedActions } from '@hooks/useTypedActions';
+import { useTypedSelector } from '@hooks/useTypedSelector';
+import { selectActivePointPlace, selectAuthorizationStatus } from '@store/selectors';
 
 type CardProps = {
   card: Place;
@@ -24,6 +24,7 @@ function PlaceCard({ card, styled = 'cities' }: CardProps): JSX.Element {
 
   const [isFavorite, setIsFavorite] = useState(card.isFavorite);
   const [toggleFavorite] = useToggleFavoriteMutation();
+  const navigate = useNavigate();
 
   const { authorizationStatus, activePointPlace } = useTypedSelector(
     (state) => ({
@@ -33,7 +34,13 @@ function PlaceCard({ card, styled = 'cities' }: CardProps): JSX.Element {
     shallowEqual, // Добавляем поверхностное сравнение
   );
 
+  const buttonClass = isFavorite && authorizationStatus === AuthStatus.Auth ? 'place-card__bookmark-button--active' : '';
+  const buttonLabel = isFavorite ? 'In bookmarks' : 'To bookmarks';
   const handleClick = () => {
+    if (authorizationStatus !== AuthStatus.Auth) {
+      navigate(Paths.Login);
+      return;
+    }
     setIsFavorite((prev) => !prev);
     toggleFavorite({ status: card.isFavorite ? 0 : 1, favorite: card, offerId: String(id) });
   };
@@ -66,11 +73,11 @@ function PlaceCard({ card, styled = 'cities' }: CardProps): JSX.Element {
             <b className='place-card__price-value'>&euro;{price}</b>
             <span className='place-card__price-text'>&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''}`} type='button' onClick={handleClick} disabled={authorizationStatus !== AuthStatus.Auth}>
+          <button className={`place-card__bookmark-button button ${buttonClass}`} type='button' onClick={handleClick}>
             <svg className='place-card__bookmark-icon' width='18' height='19'>
               <use xlinkHref='#icon-bookmark'></use>
             </svg>
-            <span className='visually-hidden'>{isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
+            <span className='visually-hidden'>{buttonLabel}</span>
           </button>
         </div>
         <div className='place-card__rating rating'>

@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { Paths } from '../enums/paths';
-import { useTypedActions } from '../hooks/useTypedActions';
-import { useTypedSelector } from '../hooks/useTypedSelector';
+import { Paths } from '@enums/paths';
+import { useTypedActions } from '@hooks/useTypedActions';
+import { useTypedSelector } from '@hooks/useTypedSelector';
 
 export default function CitiesMenu() {
   const { city: paramCity } = useParams();
@@ -26,16 +26,18 @@ export default function CitiesMenu() {
   }, [paramCity]);
 
   return (
-    <section className='locations container'>
-      <ul className='locations__list tabs__list'>
-        {CITIES.map((city: string) => (
-          <li className='locations__item' key={city}>
-            <Link to={Paths.MainCity.replace(':city', city.toLocaleLowerCase())} className={`locations__item-link tabs__item ${getStyleClass(city)}`}>
-              <span>{city}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <div className='tabs'>
+      <section className='locations container'>
+        <ul className='locations__list tabs__list'>
+          {CITIES.map((city: string) => (
+            <li className='locations__item' key={city}>
+              <Link to={Paths.MainCity.replace(':city', city.toLocaleLowerCase())} className={`locations__item-link tabs__item ${getStyleClass(city)}`}>
+                <span>{city}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
   );
 }

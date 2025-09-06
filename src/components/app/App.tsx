@@ -1,22 +1,22 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { AuthStatus } from '../enums/auth';
-import { Paths } from '../enums/paths';
-import { useTypedActions } from '../hooks/useTypedActions';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import LayoutMain from '../layouts/LayoutMain';
-import { useGetLoginQuery } from '../services/api';
-import { handleError } from '../services/errorHandler';
-import { getToken } from '../services/token';
-import Favorites from './Favorites';
-import Login from './Login';
-import Main from './Main';
-import Offer from './Offer';
-import PageNotFound from './PageNotFound';
-import PrivateRoute from './PrivateRoute';
-import Spinner from './Spinner';
-import { selectAuthorizationStatus } from '../store/selectors';
+import { Paths } from '@enums/paths';
+import { AuthStatus } from '@enums/auth';
+import { getToken } from '@services/token';
+import { useGetLoginQuery } from '@services/api';
+import { handleError } from '@services/errorHandler';
+import Main from '@components/pages/Main';
+import Offer from '@components/pages/Offer';
+import Login from '@components/pages/Login';
+import Spinner from '@components/ui/Spinner';
+import LayoutMain from '@layouts/LayoutMain';
+import Favorites from '@components/pages/Favorites';
+import PageNotFound from '@components/pages/NotFound';
+import PrivateRoute from '@components/common/PrivateRoute';
+import { useTypedActions } from '@hooks/useTypedActions';
+import { useTypedSelector } from '@hooks/useTypedSelector';
+import { selectAuthorizationStatus } from '@store/selectors';
 
 // 1. AuthStatus.Unknown
 // При первой загрузке (начальное состояние)

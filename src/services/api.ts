@@ -7,12 +7,16 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: axiosBaseQuery(),
   keepUnusedDataFor: 30,
-  tagTypes: ['Offers', 'Favorite', 'Auth', 'Comments', 'Nearby-Offers'],
+  tagTypes: ['Offers', 'Offer', 'Favorite', 'Auth', 'Comments', 'Nearby-Offers'],
   endpoints: (builder) => ({
     getOffers: builder.query<Place[], void>({
       query: () => ({ url: '/offers', method: 'GET' }),
       keepUnusedDataFor: 0,
       providesTags: ['Offers'],
+    }),
+    getOffer: builder.query<Place, string | undefined>({
+      query: (offerId) => ({ url: `/offers/${offerId}`, method: 'GET' }),
+      providesTags: (offerId) => [{ type: 'Offer', offerId }],
     }),
     getFavorite: builder.query<Place[], void>({
       query: () => ({ url: '/favorite', method: 'GET' }),
@@ -63,7 +67,7 @@ export const api = createApi({
           favorite,
         },
       }),
-      invalidatesTags: ['Favorite'],
+      invalidatesTags: ['Favorite', 'Offers', 'Offer', 'Nearby-Offers'],
     }),
   }),
 });
@@ -71,6 +75,7 @@ export const api = createApi({
 export const {
   useGetOffersQuery,
   useGetFavoriteQuery,
+  useGetOfferQuery,
   useGetLoginQuery,
   useLoginUserMutation,
   useLogoutUserMutation,

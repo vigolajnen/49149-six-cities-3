@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
-import { Paths } from '../enums/paths';
+type FavoritesEmptyProps = {
+  children: React.ReactNode;
+};
 
-export default function FavoritesEmpty() {
+export default function FavoritesEmpty({ children }: FavoritesEmptyProps) {
   return (
     <div className='page page--favorites-empty'>
       <main className='page__main page__main--favorites page__main--favorites-empty'>
@@ -15,11 +16,7 @@ export default function FavoritesEmpty() {
           </section>
         </div>
       </main>
-      <footer className='footer'>
-        <Link className='footer__logo-link' to={Paths.Main}>
-          <img className='footer__logo' src='img/logo.svg' alt='6 cities logo' width='64' height='33' loading='lazy' />
-        </Link>
-      </footer>
+      {children}
     </div>
   );
 }

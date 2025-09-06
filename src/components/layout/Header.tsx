@@ -1,12 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 
-import { AuthStatus } from '../enums/auth';
-import { Paths } from '../enums/paths';
-import { useTypedActions } from '../hooks/useTypedActions';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { useGetFavoriteQuery, useLogoutUserMutation } from '../services/api';
-import { dropToken, getToken } from '../services/token';
-import { User } from '../types';
+import { User } from '@/types';
+import { Paths } from '@enums/paths';
+import { AuthStatus } from '@enums/auth';
+import { dropToken, getToken } from '@services/token';
+import { useGetFavoriteQuery, useLogoutUserMutation } from '@services/api';
+import { useTypedActions } from '@hooks/useTypedActions';
+import { useTypedSelector } from '@hooks/useTypedSelector';
 
 export default function Header({ hasAccess }: { hasAccess: AuthStatus }) {
   const { pathname } = useLocation();
